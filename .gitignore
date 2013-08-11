@@ -1,0 +1,25 @@
+#################
+## Eclipse
+#################
+
+*.pydevproject
+.project
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+#Scala Stuffs
+proguard_cache/
+proguard_cache_conf/
+
+
+#android stuff
+gen/
