@@ -8,6 +8,7 @@ import com.xah.chat.datamodel.tables.Contacts
 import android.content.ContentValues
 import com.xah.chat.datamodel.tables.ContactFields
 import android.util.Log
+import com.xah.chat.comms.GCM.GCM
 
 class MainActivity extends Activity {
 	val TAG = "MainActivity"
@@ -17,12 +18,14 @@ class MainActivity extends Activity {
 		getFragmentManager().beginTransaction()
 			.add(R.id.content_frame, new ContactsFragment())
 			.commit()
-//		for (i <- 1 to 500) {
-//			val values = new ContentValues
-//			values.put(ContactFields.Name.toString(), "test Name " + i)
-//			values.put(ContactFields.MCName.toString(), "testMCName" + i)
-//			values.put(ContactFields.Status.toString(), "status messages " + i)
-//			val uri = getContentResolver().insert(Contacts.CONTENT_URI, values)
-//		}
+		
+		// setup GCM and register only once a week
+		// or re-register if the app version has changed.
+		val gcm = new GCM(this)
+		Option(gcm.registrationId) match {
+			case Some(s) => if(s.isEmpty()) gcm.registerBackground() 
+			case _ => //null string should never happen
+		}
+		Log.d(TAG, "GCM Registration ID: " + gcm.registrationId)
 	}
 }

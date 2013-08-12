@@ -22,11 +22,11 @@ class ContactsFragment extends Fragment with LoaderManager.LoaderCallbacks[Curso
 	var mAdapter: ContactsCursorAdapter = _
 	val TAG = "ContactsFragment"
 	
-	override def onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View = {
+	override def onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) = {
 		val view = inflater.inflate(R.layout.contacts_fragment, null)
 		contacts_list = view.findViewById(R.id.contacts_list).asInstanceOf[ListView]
 		getLoaderManager().initLoader(0, null, this)
-		return view
+		view
 	}
 	
 	override def onCreateLoader(id: Int, data: Bundle) = {
@@ -37,9 +37,8 @@ class ContactsFragment extends Fragment with LoaderManager.LoaderCallbacks[Curso
 	override def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) = {
 		if (mAdapter == null) {
 			mAdapter = new ContactsCursorAdapter(getActivity())
-			contacts_list.setAdapter(mAdapter)
 		}
-		
+		contacts_list.setAdapter(mAdapter)
 		mAdapter.changeCursor(cursor);
 		
 	}

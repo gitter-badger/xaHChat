@@ -28,7 +28,7 @@ class DataProvider extends ContentProvider {
 	private var mContactsHelper: ContactsHelper = _
 	private var mMessagesHelper: MessagesHelper = _
 
-	override def onCreate(): Boolean = {
+	override def onCreate() = {
 		mContactsHelper = new ContactsHelper(getContext)
 		mMessagesHelper = new MessagesHelper(getContext)
 		true

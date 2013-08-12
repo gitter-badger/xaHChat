@@ -20,12 +20,9 @@ class ContactsCursorAdapter(context: Activity) extends CursorAdapter(context, nu
 	}
 
 	def bindView(v: View, c: Context, cursor: Cursor): Unit = {
-		Log.d(TAG, ContactFields.Name.id.toString)
-		Log.d(TAG, ContactFields.MCName.id.toString)
 		val t1 = v.findViewById(android.R.id.text1).asInstanceOf[TextView]
 		val t2 = v.findViewById(android.R.id.text2).asInstanceOf[TextView]
 		t1.setText(cursor.getString(cursor.getColumnIndex(ContactFields.Name.toString)))
 		t2.setText(cursor.getString(cursor.getColumnIndex(ContactFields.Status.toString)))
 	}
-
 }
