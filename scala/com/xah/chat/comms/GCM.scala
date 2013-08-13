@@ -77,6 +77,5 @@ class GCM(activity: Activity) {
 				Log.e(TAG, "registerBackground", e)
 			}
 		}
-		registerFuture
 	}
 }
