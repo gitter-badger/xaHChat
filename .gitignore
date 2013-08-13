@@ -15,7 +15,8 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+.log
+.cache
 #Scala Stuffs
 proguard_cache/
 proguard_cache_conf/
