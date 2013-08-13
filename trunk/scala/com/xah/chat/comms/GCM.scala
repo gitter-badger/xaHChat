@@ -7,6 +7,14 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.util.{ Success, Failure }
 import android.util.Log
+import android.os.Bundle
+import android.support.v4.app.NotificationCompat
+import com.xah.chat.R
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import com.xah.chat.ui.activities.MainActivity
+import android.app.Notification
 
 object GCM {
 	val EXTRA_MESSAGE = "gmc_message"
@@ -17,6 +25,24 @@ object GCM {
 	// Default life span (7 days) of a reservation until it is considered expired
 	val REGISTRATION_EXPIRTY_TIME_MS = 1000 * 3600 * 24 * 7
 	val SENDER_ID = "385981152969"
+	def sendNotification(context: Context, bundle: Bundle) = {
+	    val pIntent = PendingIntent.getActivity(context, 0, 
+	            new Intent(context, classOf[MainActivity]), 0)
+	    val noti = new NotificationCompat.Builder(context)
+            .setContentTitle("xaHChat message")
+            .setContentText(bundle.getString("message"))
+            .setStyle(new NotificationCompat.BigTextStyle()
+            .bigText(bundle.getString("message")))
+            .setSmallIcon(R.drawable.ic_launcher)
+            .setContentIntent(pIntent)
+            .build();
+        noti.flags |= Notification.FLAG_AUTO_CANCEL;
+        noti.defaults |= Notification.DEFAULT_SOUND;
+        noti.defaults |= Notification.DEFAULT_LIGHTS;
+        noti.defaults |= Notification.DEFAULT_VIBRATE;
+        context.getSystemService(Context.NOTIFICATION_SERVICE)
+        	.asInstanceOf[NotificationManager].notify(0, noti);
+	}
 }
 
 class GCM(activity: Activity) {
