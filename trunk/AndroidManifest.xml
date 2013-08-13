@@ -24,6 +24,17 @@
             </intent-filter>
         </activity>
 
+        <receiver 
+            android:name=".comms.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.xah.chat.gcm"/>
+            </intent-filter>
+        </receiver>
+        
+        <service android:name=".comms.GCMIntentService" />
+        
         <provider
             android:name=".datamodel.DataProvider"
             android:authorities="com.xah.chat.data"

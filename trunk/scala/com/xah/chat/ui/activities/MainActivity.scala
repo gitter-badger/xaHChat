@@ -8,7 +8,7 @@ import com.xah.chat.datamodel.tables.Contacts
 import android.content.ContentValues
 import com.xah.chat.datamodel.tables.ContactFields
 import android.util.Log
-import com.xah.chat.comms.GCM.GCM
+import com.xah.chat.comms.GCM
 
 class MainActivity extends Activity {
 	val TAG = "MainActivity"

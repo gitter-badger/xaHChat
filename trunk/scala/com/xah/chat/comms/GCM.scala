@@ -1,8 +1,8 @@
-package com.xah.chat.comms.GCM
+package com.xah.chat.comms
 
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import android.app.Activity
-import android.content.{ SharedPreferences, Context }
+import android.content.Context
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.util.{ Success, Failure }
