@@ -38,7 +38,7 @@ class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 				%s Text,
 				%s TIMESTAMP,
 				%s Boolean
-			)""".format(Messages.TABLE_NAME, BaseColumns._ID, BaseColumns._ID, MessageFields.Contact, MessageFields.Message , 
+			)""".format(Messages.TABLE_NAME, BaseColumns._ID, ContactFields.JID, MessageFields.Contact, MessageFields.Message , 
 				MessageFields.Time, MessageFields.isSent)
 		Log.d(TAG, "create")
 		db.execSQL(create);

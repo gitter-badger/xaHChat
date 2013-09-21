@@ -18,6 +18,7 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 				%s Text,
 				%s Text,
 				%s Text,
+				%s Text,
 				%s Text
 			)""".format(Contacts.TABLE_NAME, BaseColumns._ID, ContactFields.Name, ContactFields.MCName, 
 				ContactFields.Server, ContactFields.Status, ContactFields.AvatarId)
@@ -44,9 +45,9 @@ object Contacts {
 
 object ContactFields extends Enumeration {
 	type Field = Value
-	val _ID, Name, MCName, Server, Status, AvatarId = Value
+	val _ID, JID, Name, MCName, Server, Status, AvatarId = Value
 	val projection = (for(v <- values) yield ( v.toString())).toArray
 }
 
-class Contact(val Name: String, val MCName: String, 
+class Contact(val JID: String, val Name: String, val MCName: String, 
 		val Server: String, val Status: String, val AvatarId: String) 

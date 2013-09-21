@@ -2,6 +2,7 @@ package com.xah.chat.ui.activities
 
 import android.app.Activity
 import android.os.Bundle
+import android.content.Intent
 import com.xah.chat.R
 import com.xah.chat.ui.fragments.ContactsFragment
 import com.xah.chat.datamodel.tables.Contacts
@@ -9,8 +10,10 @@ import android.content.ContentValues
 import com.xah.chat.datamodel.tables.ContactFields
 import android.util.Log
 import com.xah.chat.comms.GCM
+import android.content.Intent
+import com.xah.chat.comms.XService
 
-class MainActivity extends Activity {
+class MainActivity extends BaseActivity {
 	val TAG = "MainActivity"
 	override def onCreate(data : Bundle) : Unit = {
 		super.onCreate(data)
@@ -28,4 +31,7 @@ class MainActivity extends Activity {
 		}
 		Log.d(TAG, "GCM Registration ID: " + gcm.registrationId)
 	}
+	
 }
+
+
