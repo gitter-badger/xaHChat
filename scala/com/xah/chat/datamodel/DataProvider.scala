@@ -4,11 +4,10 @@ import android.content.ContentProvider
 import android.net.Uri
 import android.database.Cursor
 import android.database.sqlite.SQLiteQueryBuilder
+import scala.collection.JavaConversions._
 import android.content.UriMatcher
-import com.xah.chat.datamodel.tables.ContactsHelper
-import com.xah.chat.datamodel.tables.MessagesHelper
-import android.content.ContentValues
-import android.content.ContentUris
+import com.xah.chat.datamodel.tables.{ContactsHelper, MessagesHelper}
+import android.content.{ContentValues, ContentUris}
 import android.database.SQLException
 import com.xah.chat.datamodel.tables.Contacts
 import com.xah.chat.datamodel.tables.Messages
@@ -62,6 +61,15 @@ class DataProvider extends ContentProvider {
 		case _ => throw new IllegalArgumentException("Unknown URI " + uri)
 	}
 
+	override def bulkInsert(uri: Uri, values: Array[ContentValues]) : Int = {
+	    val now = System.currentTimeMillis().toDouble
+	    
+	    values.foreach(value => { 
+	        this.insert(uri, value)
+	    })
+	    0
+	}
+	
 	override def insert(uri: Uri, initialValues: ContentValues): Uri = {
 		val values =
 			if (initialValues != null) new ContentValues(initialValues)

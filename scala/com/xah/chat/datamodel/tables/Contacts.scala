@@ -20,7 +20,7 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 				%s Text,
 				%s Text,
 				%s Text
-			)""".format(Contacts.TABLE_NAME, BaseColumns._ID, ContactFields.Name, ContactFields.MCName, 
+			)""".format(Contacts.TABLE_NAME, BaseColumns._ID, ContactFields.JID, ContactFields.Name, ContactFields.MCName, 
 				ContactFields.Server, ContactFields.Status, ContactFields.AvatarId)
 		Log.d(TAG, create)
 		db.execSQL(create);
