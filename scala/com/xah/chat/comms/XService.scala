@@ -26,7 +26,7 @@ class XService extends Service with ConnectionListener with RosterListener {
     private var connection: XMPPConnection = _
     private var config: AndroidConnectionConfiguration = _
     private var username = "lemonxah"
-    private var password = "M8kio9ou9u"
+    private var password = ""
 
     private var roster: Roster = _
 
