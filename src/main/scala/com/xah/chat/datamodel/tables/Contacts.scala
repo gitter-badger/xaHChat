@@ -23,12 +23,12 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 			)""".format(Contacts.TABLE_NAME, BaseColumns._ID, ContactFields.JID, ContactFields.Name, ContactFields.MCName, 
 				ContactFields.Server, ContactFields.Status, ContactFields.AvatarId)
 		Log.d(TAG, create)
-		db.execSQL(create);
+		db.execSQL(create)
 	}
 
 	def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-		val droptable = "drop table if exists %s".format(Contacts.TABLE_NAME)
-		db.execSQL(droptable)
+		val dropTable = "drop table if exists %s".format(Contacts.TABLE_NAME)
+		db.execSQL(dropTable)
 		onCreate(db)
 	}
 }
@@ -47,7 +47,7 @@ object ContactFields extends Enumeration {
 	type Field = Value
 	val _ID, JID, Name, MCName, Server, Status, AvatarId = Value
 	val projection =
-    (for(v <- values) yield ( if (v == ContactFields._ID) BaseColumns._ID else v.toString()))
+    for(v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString
 }
 
 class Contact(val JID: String, val Name: String, val MCName: String, 

@@ -13,7 +13,7 @@ object MessageFields extends Enumeration {
 	type Field = Value
 	val _ID, Contact, Message, Time, isSent = Value
 	val projection =
-    (for(v <- values) yield ( if (v == MessageFields._ID) BaseColumns._ID else v.toString()))
+    for(v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString
 }
 
 class Message(val Contact: String, val Message: String, 
@@ -42,12 +42,12 @@ class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 			)""".format(Messages.TABLE_NAME, BaseColumns._ID, ContactFields.JID, MessageFields.Contact, MessageFields.Message , 
 				MessageFields.Time, MessageFields.isSent)
 		Log.d(TAG, "create")
-		db.execSQL(create);
+		db.execSQL(create)
 	}
 
 	def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-		val droptable = "drop table if exists %s".format(Messages.TABLE_NAME)
-		db.execSQL(droptable)
+		val dropTable = "drop table if exists %s".format(Messages.TABLE_NAME)
+		db.execSQL(dropTable)
 		onCreate(db)
 	}
 
