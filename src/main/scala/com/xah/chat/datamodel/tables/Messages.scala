@@ -32,10 +32,10 @@ object Messages {
 class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 2) {
 	val TAG = "MessagesHelper"
 	def onCreate(db: SQLiteDatabase): Unit = {
-		val create = """
+		val create = s"""
 			create table ${Messages.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
-				foreign key(${ContactFields.JID}) references Contacts(${MessageFieldsFields.JID}) not null,
+				foreign key(${ContactFields.JID}) references Contacts(${MessageFields.JID}) not null,
 				${MessageFields.Message} Text,
 				${MessageFields.Time} TIMESTAMP,
 				${MessageFields.isSent} Boolean
