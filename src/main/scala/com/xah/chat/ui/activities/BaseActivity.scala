@@ -9,15 +9,15 @@ import android.content.Context
 class BaseActivity extends Activity {
     val mConnection = new XServiceConnection  
 	override def onStart() = {
-        super.onStart()
-	    bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
+    super.onStart()
+	  bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
 	}
     
-    override def onStop() = {
-        super.onStop()
-        mConnection.mBound match {
-            case true => unbindService(mConnection)
-            case _ => ()
-        }
+  override def onDestroy() = {
+    super.onDestroy()
+    mConnection.mBound match {
+      case true => unbindService(mConnection)
+      case _ => ()
     }
+  }
 }
