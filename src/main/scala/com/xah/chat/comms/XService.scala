@@ -8,12 +8,7 @@ import ExecutionContext.Implicits.global
 import scala.util.{ Success, Failure }
 import android.util.Log
 import android.os.Build
-import org.jivesoftware.smack.{AndroidConnectionConfiguration, 
-    SmackAndroid, 
-    ConnectionListener, 
-    Roster, 
-    RosterListener, 
-    XMPPConnection }
+import org.jivesoftware.smack._
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode
 import org.jivesoftware.smack.packet.Presence
 import java.util.Collection
@@ -41,7 +36,10 @@ class XService extends Service with ConnectionListener with RosterListener {
     override def onCreate() = {
         SmackAndroid.init(this.getApplicationContext())
         future {
-            config = new AndroidConnectionConfiguration("ec2-54-200-17-151.us-west-2.compute.amazonaws.com")
+            //ec2-54-200-17-151.us-west-2.compute.amazonaws.com
+            Log.i(TAG, "just before call")
+            config = new AndroidConnectionConfiguration("chat.xah.co.za", 5222, "xaHChat Server")
+            Log.i(TAG, "just after call")
             config.setSASLAuthenticationEnabled(true);
             config.setCompressionEnabled(false);
             config.setSecurityMode(SecurityMode.enabled)
@@ -61,10 +59,18 @@ class XService extends Service with ConnectionListener with RosterListener {
                 }
             }
             
-            Log.i(TAG, "Connecting..")
+            Log.i(TAG, "setting connection")
             connection = new XMPPConnection(config)
             connection.connect()
-            connection.login(getLoginName(username), password)
+            Log.i(TAG, "just before login")
+            try {
+              connection.login(getLoginName(username), password)
+            } catch {
+              case ex: XMPPException => {
+                Log.e(TAG, "login broke", ex)
+              }
+            }
+            Log.i(TAG, "just after login")
             connection.addConnectionListener(this)
             handleRoster()
         }
@@ -72,29 +78,29 @@ class XService extends Service with ConnectionListener with RosterListener {
 
     def handleRoster() = {
         future {
-            val v = new ContentValues()
-            v.put(ContactFields.JID.toString, "123@blah")
-            v.put(ContactFields.Name.toString, "this is my name")
-            this.getContentResolver.insert(Contacts.CONTENT_URI, v)
-
-            val entries = connection.getRoster().getEntries()
-	        val allValues = entries.map(entry => {
-	            val values = new ContentValues()
-	            Log.i(TAG, "%s: %s".format(entry.getName(), entry.getUser()));
-	            values.put(ContactFields.JID.toString(), entry.getUser())
-	            values.put(ContactFields.Name.toString(), entry.getName())
-	            values.put(ContactFields.Status.toString(), entry.getStatus().toString())
-	            values
-	        }).toArray
-	        Log.i(TAG, "inserting Roster")
-	        this.getContentResolver().bulkInsert(Contacts.CONTENT_URI, allValues)
+          try {
+            val entries = connection.getRoster.getEntries
+            val allValues = entries.map(entry => {
+                val values = new ContentValues()
+                Log.i(TAG, "%s: %s".format(entry.getName, entry.getUser))
+                values.put(ContactFields.JID.toString, entry.getUser)
+                values.put(ContactFields.Name.toString, entry.getName)
+                if (entry.getStatus != null)
+                  values.put(ContactFields.Status.toString, entry.getStatus.toString)
+                values
+            }).toArray
+            Log.i(TAG, "inserting Roster")
+            this.getContentResolver.bulkInsert(Contacts.CONTENT_URI, allValues)
+          } catch {
+            case ex: Exception => Log.e(TAG, "getRoster failed", ex)
+          }
         }
     }
     
     override def onDestroy() = {
         future {
             Log.i(TAG, "disconnecting if still connected")
-            if (connection.isConnected()) connection.disconnect()
+            if (connection.isConnected) connection.disconnect()
         }
     }
 
