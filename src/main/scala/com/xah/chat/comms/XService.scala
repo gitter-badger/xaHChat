@@ -25,8 +25,8 @@ class XService extends Service with ConnectionListener with RosterListener {
     private var mBinder: IBinder = _
     private var connection: XMPPConnection = _
     private var config: AndroidConnectionConfiguration = _
-    private var username = "lemonxah"
-    private var password = ""
+    private val username = "test"
+    private val password = "test"
 
     private var roster: Roster = _
 
@@ -41,7 +41,7 @@ class XService extends Service with ConnectionListener with RosterListener {
     override def onCreate() = {
         SmackAndroid.init(this.getApplicationContext())
         future {
-            config = new AndroidConnectionConfiguration("54.200.17.151")
+            config = new AndroidConnectionConfiguration("ec2-54-200-17-151.us-west-2.compute.amazonaws.com")
             config.setSASLAuthenticationEnabled(true);
             config.setCompressionEnabled(false);
             config.setSecurityMode(SecurityMode.enabled)
