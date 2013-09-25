@@ -12,7 +12,8 @@ import android.util.Log
 object MessageFields extends Enumeration {
 	type Field = Value
 	val _ID, Contact, Message, Time, isSent = Value
-	val projection = (for(v <- values) yield ( v.toString())).toArray
+	val projection =
+    (for(v <- values) yield ( if (v == MessageFields._ID) BaseColumns._ID else v.toString()))
 }
 
 class Message(val Contact: String, val Message: String, 
