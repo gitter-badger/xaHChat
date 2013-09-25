@@ -45,7 +45,7 @@ class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 	}
 
 	def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-		val dropTable = "drop table if exists %s".format(Messages.TABLE_NAME)
+		val dropTable = s"drop table if exists ${Messages.TABLE_NAME}"
 		db.execSQL(dropTable)
 		onCreate(db)
 	}

@@ -34,14 +34,13 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 	def onCreate(db: SQLiteDatabase): Unit = {
 		val create = s"""
 			create table ${Contacts.TABLE_NAME} (
-				${BaseColumns._ID} integer autoincrement,
+				${BaseColumns._ID} integer primary key autoincrement,
 				${ContactFields.JID} Text not null,
 				${ContactFields.Name} Text,
 				${ContactFields.MCName} Text,
 				${ContactFields.Server} Text,
 				${ContactFields.Status} Text,
-				${ContactFields.AvatarId} Text,
-        PRIMARY KEY (${ContactFields.JID})
+				${ContactFields.AvatarId} Text
 			)"""
 		Log.d(TAG, create)
 		db.execSQL(create)
