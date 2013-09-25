@@ -24,3 +24,6 @@ proguard_cache_conf/
 
 #android stuff
 gen/
+
+#sbt-android
+target
