@@ -34,7 +34,7 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 
 object Contacts {
 	val _ID = BaseColumns._ID
-    val _COUNT = BaseColumns._COUNT	
+  val _COUNT = BaseColumns._COUNT
 	val TABLE_NAME = "Contacts"
 	final val CONTENT_URI = Uri.parse("content://" + xah.AUTHORITY + "/contacts")
 	final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.contact"

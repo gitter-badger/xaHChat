@@ -21,7 +21,7 @@ class Message(val Contact: String, val Message: String,
 
 object Messages {
 	val _ID = BaseColumns._ID
-    val _COUNT = BaseColumns._COUNT	
+  val _COUNT = BaseColumns._COUNT
 	val TABLE_NAME = "Contacts"
 	final val CONTENT_URI = Uri.parse("content://" + xah.AUTHORITY + "/messages")
 	final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.message"
