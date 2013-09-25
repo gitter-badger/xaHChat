@@ -62,11 +62,7 @@ class DataProvider extends ContentProvider {
 	}
 
 	override def bulkInsert(uri: Uri, values: Array[ContentValues]) : Int = {
-	    val now = System.currentTimeMillis().toDouble
-	    
-	    values.foreach(value => { 
-	        this.insert(uri, value)
-	    })
+	    values.foreach(value => this.insert(uri, value))
 	    0
 	}
 	

@@ -16,7 +16,7 @@ import scala.collection.JavaConversions._
 import com.xah.chat.datamodel.tables.{ContactFields, Contacts }
 
 class XService extends Service with ConnectionListener with RosterListener {
-    private val TAG = "XService"
+    private val TAG = "com.xah.chat/XService"
     private var mBinder: IBinder = _
     private var connection: XMPPConnection = _
     private var config: AndroidConnectionConfiguration = _
@@ -45,22 +45,23 @@ class XService extends Service with ConnectionListener with RosterListener {
             config.setSecurityMode(SecurityMode.enabled)
 
             Build.VERSION.SDK_INT match {
-                case Build.VERSION_CODES.ICE_CREAM_SANDWICH => {
+                case i if i > Build.VERSION_CODES.ICE_CREAM_SANDWICH => {
 	                config.setTruststoreType("AndroidCAStore")
 	                config.setTruststorePassword(null)
-	                config.setTruststorePath(null)
                 }
                 case _ => {
+                  var path = System.getProperty("javax.net.ssl.trustStore")
+                  if (path == null)
+                    path = System.getProperty("java.home") + "/etc/security/cacerts.bks"
 	                config.setTruststoreType("BKS")
-	                var path = System.getProperty("javax.net.ssl.trustStore")
-	                if (path == null)
-	                    path = System.getProperty("java.home") + "/etc/security/cacerts.bks"
-	                config.setTruststorePath(path);
+                  config.setTruststorePath(path);
                 }
             }
-            
+
+
             Log.i(TAG, "setting connection")
             connection = new XMPPConnection(config)
+            Log.i(TAG, "connecting")
             connection.connect()
             Log.i(TAG, "just before login")
             try {

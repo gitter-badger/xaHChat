@@ -1,27 +1,26 @@
 package com.xah.chat.datamodel.tables
 
-import android.database.sqlite.SQLiteOpenHelper
-import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.{SQLiteOpenHelper, SQLiteDatabase}
 import android.content.Context
 import android.net.Uri
 import com.xah.chat.datamodel.xah
 import android.provider.BaseColumns
 import android.util.Log
 
-class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
+class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 2) {
 	val TAG = "ContactsHelper"
 	def onCreate(db: SQLiteDatabase): Unit = {
 		val create = """
-			create table %s (
-				%s integer primary key autoincrement,
-				%s Text not null,
-				%s Text,
-				%s Text,
-				%s Text,
-				%s Text,
-				%s Text
-			)""".format(Contacts.TABLE_NAME, BaseColumns._ID, ContactFields.JID, ContactFields.Name, ContactFields.MCName, 
-				ContactFields.Server, ContactFields.Status, ContactFields.AvatarId)
+			create table ${Contacts.TABLE_NAME} (
+				${BaseColumns._ID} integer autoincrement,
+				${ContactFields.JID} Text not null,
+				${ContactFields.Name} Text,
+				${ContactFields.MCName} Text,
+				${ContactFields.Server} Text,
+				${ContactFields.Status} Text,
+				${ContactFields.AvatarId} Text,
+        PRIMARY KEY (${ContactFields.JID})
+			)"""
 		Log.d(TAG, create)
 		db.execSQL(create)
 	}
@@ -48,7 +47,6 @@ object ContactFields extends Enumeration {
 	val _ID, JID, Name, MCName, Server, Status, AvatarId = Value
 	val projection =
     (for(v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
-
 }
 
 class Contact(val JID: String, val Name: String, val MCName: String, 
