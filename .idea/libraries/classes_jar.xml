@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="classes.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/target/aars/com.google.android.gms-play-services-3.2.25/classes.jar!/"/>
+    </CLASSES>
+    <JAVADOC> </JAVADOC>
+    <SOURCES> </SOURCES>
+  </library>
+</component>
