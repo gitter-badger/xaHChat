@@ -47,7 +47,8 @@ object ContactFields extends Enumeration {
 	type Field = Value
 	val _ID, JID, Name, MCName, Server, Status, AvatarId = Value
 	val projection =
-    for(v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString
+    (for(v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
+
 }
 
 class Contact(val JID: String, val Name: String, val MCName: String, 

@@ -18,12 +18,12 @@ import android.app.Notification
 
 object GCM {
 	val EXTRA_MESSAGE = "gmc_message"
-	val SHAREDPREFERNCES_NAME = "com.xah.chat.comms.GCM"
+	val SHAREDPREFERENCES_NAME = "com.xah.chat.comms.GCM"
 	val PROPERTY_REG_ID = "gmc_registration_id"
 	val PROPERTY_APP_VERSION = "appVersion"
 	val PROPERTY_ON_SERVER_EXPIRATION_TIME = "gmc_on_server_expiration_time_ms"
 	// Default life span (7 days) of a reservation until it is considered expired
-	val REGISTRATION_EXPIRTY_TIME_MS = 1000 * 3600 * 24 * 7
+	val REGISTRATION_EXPIRY_TIME_MS = 1000 * 3600 * 24 * 7
 	val SENDER_ID = "385981152969"
 	def sendNotification(context: Context, bundle: Bundle) = {
 	    val pIntent = PendingIntent.getActivity(context, 0, 
@@ -35,21 +35,21 @@ object GCM {
             .bigText(bundle.getString("message")))
             .setSmallIcon(R.drawable.ic_launcher)
             .setContentIntent(pIntent)
-            .build();
-        noti.flags |= Notification.FLAG_AUTO_CANCEL;
-        noti.defaults |= Notification.DEFAULT_SOUND;
-        noti.defaults |= Notification.DEFAULT_LIGHTS;
-        noti.defaults |= Notification.DEFAULT_VIBRATE;
+            .build()
+        noti.flags |= Notification.FLAG_AUTO_CANCEL
+        noti.defaults |= Notification.DEFAULT_SOUND
+        noti.defaults |= Notification.DEFAULT_LIGHTS
+        noti.defaults |= Notification.DEFAULT_VIBRATE
         context.getSystemService(Context.NOTIFICATION_SERVICE)
-        	.asInstanceOf[NotificationManager].notify(0, noti);
+        	.asInstanceOf[NotificationManager].notify(0, noti)
 	}
 }
 
 class GCM(activity: Activity) {
 	val TAG = "GCM"
-	val appVersion = activity.getPackageManager().getPackageInfo(activity.getPackageName(), 0).versionCode
+	val appVersion = activity.getPackageManager.getPackageInfo(activity.getPackageName, 0).versionCode
 	val gcm = GoogleCloudMessaging.getInstance(activity)
-	val prefs = activity.getSharedPreferences(GCM.SHAREDPREFERNCES_NAME, Context.MODE_PRIVATE)
+	val prefs = activity.getSharedPreferences(GCM.SHAREDPREFERENCES_NAME, Context.MODE_PRIVATE)
 	val isRegistrationExpiredq =
 		System.currentTimeMillis() > prefs.getLong(GCM.PROPERTY_ON_SERVER_EXPIRATION_TIME, -1)
 	val registrationId =
@@ -61,17 +61,16 @@ class GCM(activity: Activity) {
 			}
 		}
 	def registerBackground(): Unit = {
-		val registerFuture = future {
+		future {
 			gcm.register(GCM.SENDER_ID)
-		}
-		registerFuture onComplete {
+		} onComplete {
 			case Success(regId) => {
 				val editor = prefs.edit()
 				editor.putString(GCM.PROPERTY_REG_ID, regId)
 				editor.putInt(GCM.PROPERTY_APP_VERSION, appVersion)
-				val expirationTime = System.currentTimeMillis() + GCM.REGISTRATION_EXPIRTY_TIME_MS 
-				editor.putLong(GCM.PROPERTY_ON_SERVER_EXPIRATION_TIME, expirationTime);
-				editor.commit();
+				val expirationTime = System.currentTimeMillis() + GCM.REGISTRATION_EXPIRY_TIME_MS
+				editor.putLong(GCM.PROPERTY_ON_SERVER_EXPIRATION_TIME, expirationTime)
+				editor.commit()
 			}
 			case Failure(e) => {
 				Log.e(TAG, "registerBackground", e)

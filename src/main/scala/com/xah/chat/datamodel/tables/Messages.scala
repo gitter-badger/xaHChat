@@ -13,7 +13,7 @@ object MessageFields extends Enumeration {
 	type Field = Value
 	val _ID, Contact, Message, Time, isSent = Value
 	val projection =
-    for(v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString
+    (for(v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString).toArray
 }
 
 class Message(val Contact: String, val Message: String, 
