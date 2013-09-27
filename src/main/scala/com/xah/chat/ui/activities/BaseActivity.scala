@@ -7,12 +7,13 @@ import com.xah.chat.comms.XService
 import android.content.Context
 
 class BaseActivity extends Activity {
-    val mConnection = new XServiceConnection  
-	override def onStart() = {
+  val mConnection = new XServiceConnection
+
+  override def onStart() = {
     super.onStart()
-	  bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
-	}
-    
+    bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
+  }
+
   override def onDestroy() = {
     super.onDestroy()
     mConnection.mBound match {
