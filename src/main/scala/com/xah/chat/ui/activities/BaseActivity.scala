@@ -1,10 +1,8 @@
 package com.xah.chat.ui.activities
 
 import android.app.Activity
-import com.xah.chat.comms.XServiceConnection
-import android.content.Intent
-import com.xah.chat.comms.XService
-import android.content.Context
+import com.xah.chat.comms.{XService, XServiceConnection}
+import android.content.{Context, Intent}
 
 class BaseActivity extends Activity {
   val mConnection = new XServiceConnection

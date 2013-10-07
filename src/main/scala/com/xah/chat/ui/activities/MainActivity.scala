@@ -13,11 +13,7 @@ class MainActivity extends BaseActivity {
     getFragmentManager.beginTransaction
       .add(R.id.content_frame, new ContactsFragment())
       .commit()
-
-    // setup GCM and register only once a week
-    // or re-register if the app version has changed.
   }
-
 }
 
 
