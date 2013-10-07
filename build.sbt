@@ -6,6 +6,6 @@ name := "xaHChat"
  
 scalaSource in Compile <<= (sourceDirectory in Compile)(_ / "scala")
  
-scalaVersion := "2.10.3"
+scalaVersion := "2.10.2"
  
 scalacOptions in Compile += "-feature"
