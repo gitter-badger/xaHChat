@@ -46,6 +46,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-library:2.10.2" level="project" />
     <orderEntry type="library" name="SBT: com.android.support:support-v4:18.0.0" level="project" />
+    <orderEntry type="library" name="mqtt-client-0.4.0" level="project" />
   </component>
 </module>
 

@@ -14,6 +14,7 @@ import com.xah.chat.datamodel.tables.ContactFields
 import android.content.CursorLoader
 import com.xah.chat.ui.adapters.ContactsCursorAdapter
 import android.util.Log
+import
 
 class ContactsFragment extends Fragment with LoaderManager.LoaderCallbacks[Cursor] {
   var contacts_list: ListView = _
