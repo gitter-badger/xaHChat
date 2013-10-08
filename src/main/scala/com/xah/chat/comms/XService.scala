@@ -12,7 +12,7 @@ import scala.util.{Success, Failure}
 
 class XService extends Service {
   private val TAG = "com.xah.chat/XService"
-  private val brokerUrl = "tcp://chat.xah.co.za@1883"
+  private val brokerUrl = "tcp://chat.xah.co.za:1883"
   val topic = "hello";
 
   private var mBinder: IBinder = _
@@ -21,7 +21,7 @@ class XService extends Service {
   //Callback automatically triggers as and when new message arrives on specified topic
   private val callback = new MqttCallback() {
     //Handles Mqtt message
-    override def messageArrived(arg0: String, message: MqttMessage) {
+    override def messageArrived(topic: String, message: MqttMessage) {
       Log.i(TAG, new String(message.getPayload()))
     }
 
@@ -50,17 +50,24 @@ class XService extends Service {
       Log.i(TAG, "about to connect")
 
       // mqtt client with specific url and client id
-      client = new MqttClient(brokerUrl, MqttClient.generateClientId(), peristance)
-
+      client = new MqttClient(brokerUrl, "ThisClient", peristance)
+      val mOpts = new MqttConnectOptions
+      mOpts.setCleanSession(false)
+      client.connect(mOpts)
       client.setCallback(callback)
-      client.connect()
       Log.i(TAG, "connected")
       //Subscribe to Mqtt topic
-      client.subscribe(topic);
+
+      client.subscribe(topic, 2)
       Log.i(TAG, "subscribed")
     } onComplete {
       case Success(t) => Log.i(TAG, "connected and working")
-      case Failure(e) => Log.e(TAG, e.getMessage, e)
+      case Failure(e: MqttException) => {
+        Log.e(TAG, s"ReasonCode: ${e.getReasonCode}, Message: ${e.getMessage}")
+        if (e.getReasonCode == 0) {
+          Log.e(TAG, e.getCause.getMessage, e.getCause)
+        }
+      }
     }
 
     mBinder
