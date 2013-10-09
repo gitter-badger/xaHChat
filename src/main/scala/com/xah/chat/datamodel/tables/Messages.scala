@@ -11,7 +11,7 @@ import android.util.Log
 
 object MessageFields extends Enumeration {
   type Field = Value
-  val _ID, JID, Message, Time, isSent = Value
+  val _ID, MCName, Message, MessageId, Time, isSent = Value
   val projection =
     (for (v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString).toArray
 }
@@ -29,15 +29,16 @@ object Messages {
   final val DEFAULT_SORT_ORDER = "Time DESC"
 }
 
-class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 2) {
+class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 3) {
   val TAG = "MessagesHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
     val create = s"""
 			create table ${Messages.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
-				foreign key(${ContactFields.JID}) references Contacts(${MessageFields.JID}) not null,
+				foreign key(${ContactFields.MCName}) references Contacts(${MessageFields.MCName}) not null,
 				${MessageFields.Message} Text,
+				${MessageFields.MessageId} long,
 				${MessageFields.Time} TIMESTAMP,
 				${MessageFields.isSent} Boolean
 			)"""

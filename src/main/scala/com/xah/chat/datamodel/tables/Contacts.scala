@@ -20,7 +20,7 @@ object Contacts {
 
 object ContactFields extends Enumeration {
   type Field = Value
-  val _ID, JID, Name, MCName, Server, Status, AvatarId = Value
+  val _ID, MCName, Status = Value
   val projection =
     (for (v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
 }
@@ -29,19 +29,15 @@ class Contact(val JID: String, val Name: String, val MCName: String,
               val Server: String, val Status: String, val AvatarId: String)
 
 
-class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 2) {
+class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 3) {
   val TAG = "ContactsHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
     val create = s"""
 			create table ${Contacts.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
-				${ContactFields.JID} Text not null,
-				${ContactFields.Name} Text,
 				${ContactFields.MCName} Text,
-				${ContactFields.Server} Text,
 				${ContactFields.Status} Text,
-				${ContactFields.AvatarId} Text
 			)"""
     Log.d(TAG, create)
     db.execSQL(create)
