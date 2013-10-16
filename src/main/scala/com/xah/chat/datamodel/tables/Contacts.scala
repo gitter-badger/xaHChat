@@ -37,7 +37,7 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 			create table ${Contacts.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
 				${ContactFields.MCName} Text,
-				${ContactFields.Status} Text,
+				${ContactFields.Status} Text
 			)"""
     Log.d(TAG, create)
     db.execSQL(create)

@@ -1,6 +1,5 @@
 package com.xah.chat.ui.fragments
 
-import android.app.Fragment
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Bundle
@@ -9,13 +8,12 @@ import android.widget.ListView
 import android.app.LoaderManager
 import android.database.Cursor
 import android.content.Loader
-import com.xah.chat.datamodel.tables.Contacts
-import com.xah.chat.datamodel.tables.ContactFields
+import com.xah.chat.datamodel.tables.{Contacts, ContactFields}
 import android.content.CursorLoader
 import com.xah.chat.ui.adapters.ContactsCursorAdapter
 import android.util.Log
 
-class ContactsFragment extends Fragment with LoaderManager.LoaderCallbacks[Cursor] {
+class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Cursor] {
   var contacts_list: ListView = _
   var mAdapter: ContactsCursorAdapter = _
   val TAG = "ContactsFragment"

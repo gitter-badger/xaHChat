@@ -13,7 +13,7 @@ import scala.util.{Success, Failure}
 class XService extends Service {
   private val TAG = "com.xah.chat/XService"
   private val brokerUrl = "tcp://chat.xah.co.za:1883"
-  val topic = "hello";
+  val topic = "xahcraft/out";
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
@@ -53,6 +53,8 @@ class XService extends Service {
       client = new MqttClient(brokerUrl, "ThisClient", peristance)
       val mOpts = new MqttConnectOptions
       mOpts.setCleanSession(false)
+      mOpts.setUserName("xahchat")
+      mOpts.setPassword("!xahchat!".toCharArray)
       client.connect(mOpts)
       client.setCallback(callback)
       Log.i(TAG, "connected")
