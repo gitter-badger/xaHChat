@@ -29,7 +29,7 @@ object Messages {
   final val DEFAULT_SORT_ORDER = "Time DESC"
 }
 
-class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 3) {
+class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
   val TAG = "MessagesHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {

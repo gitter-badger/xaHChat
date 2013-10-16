@@ -20,7 +20,7 @@ class DataProvider extends ContentProvider {
 
   matcher.addURI(xah.AUTHORITY, "contacts", CONTACTS)
   matcher.addURI(xah.AUTHORITY, "contact/*", CONTACT)
-  matcher.addURI(xah.AUTHORITY, "messages/*", MESSAGES)
+  matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
 
   private var mContactsHelper: ContactsHelper = _

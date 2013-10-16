@@ -2,18 +2,20 @@ package com.xah.chat.comms
 
 import android.os.IBinder
 import android.app.Service
-import android.content.Intent
+import android.content.{ContentValues, Intent}
 import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
 import scala.concurrent._
 import ExecutionContext.Implicits.global
-import scala.util.{Success, Failure}
+import com.xah.chat.datamodel.tables._
+import scala.util.Success
+import scala.util.Failure
 
 class XService extends Service {
   private val TAG = "com.xah.chat/XService"
   private val brokerUrl = "tcp://chat.xah.co.za:1883"
-  val topic = "xahcraft/out";
+  val mTopic = "xahcraft/out";
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
@@ -22,6 +24,28 @@ class XService extends Service {
   private val callback = new MqttCallback() {
     //Handles Mqtt message
     override def messageArrived(topic: String, message: MqttMessage) {
+      topic match {
+        case mTopic => {
+          val payload = new Payload(message)
+          if (payload.isServer) {
+            val values = new ContentValues()
+            values.put(ContactFields.MCName.toString, payload.playerName)
+            values.put(ContactFields.ContactType.toString, ContactType.Server.id.toString)
+            val id = getApplicationContext.getContentResolver.update(
+              Contacts.CONTENT_URI, values, null, null
+            )
+            val msgValues = new ContentValues()
+            msgValues.put(MessageFields.MCName.toString, payload.playerName)
+            msgValues.put(MessageFields.Message.toString, payload.message)
+            msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
+            getApplicationContext.getContentResolver.insert(
+              Messages.CONTENT_URI, msgValues
+            )
+          }
+
+        }
+        case _ => Log.e(TAG, "Unhandled topic: ${topic}")
+      }
       Log.i(TAG, new String(message.getPayload()))
     }
 
@@ -60,7 +84,7 @@ class XService extends Service {
       Log.i(TAG, "connected")
       //Subscribe to Mqtt topic
 
-      client.subscribe(topic, 2)
+      client.subscribe(mTopic, 2)
       Log.i(TAG, "subscribed")
     } onComplete {
       case Success(t) => Log.i(TAG, "connected and working")

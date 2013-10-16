@@ -18,18 +18,23 @@ object Contacts {
   final val DEFAULT_SORT_ORDER = "name DESC"
 }
 
+object ContactType extends Enumeration {
+  type Field = Value
+  val Server = Value(0)
+  val Player = Value(1)
+}
+
 object ContactFields extends Enumeration {
   type Field = Value
-  val _ID, MCName, Status = Value
+  val _ID, MCName, Status, ContactType = Value
   val projection =
     (for (v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
 }
 
-class Contact(val JID: String, val Name: String, val MCName: String,
-              val Server: String, val Status: String, val AvatarId: String)
+class Contact(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
 
 
-class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 3) {
+class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
   val TAG = "ContactsHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
@@ -37,7 +42,8 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 			create table ${Contacts.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
 				${ContactFields.MCName} Text,
-				${ContactFields.Status} Text
+				${ContactFields.Status} Text,
+				${ContactFields.ContactType} long
 			)"""
     Log.d(TAG, create)
     db.execSQL(create)
