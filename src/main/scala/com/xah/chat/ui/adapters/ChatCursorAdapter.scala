@@ -15,7 +15,7 @@ import com.xah.chat.datamodel.tables.ContactFields
  */
 class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, false) {
   val layoutInflater = context.getLayoutInflater
-  val TAG = "ContactsCursorAdapter"
+  val TAG = "com.xah.ChatCursorAdapter"
 
   def newView(arg0: Context, arg1: Cursor, arg2: ViewGroup): View = {
     layoutInflater.inflate(android.R.layout.simple_list_item_2, null)

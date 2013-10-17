@@ -12,7 +12,9 @@ import com.xah.chat.datamodel.tables.Contacts
 import com.xah.chat.datamodel.tables.Messages
 
 class DataProvider extends ContentProvider {
-  val matcher = new UriMatcher(UriMatcher.NO_MATCH);
+  val matcher = new UriMatcher(UriMatcher.NO_MATCH)
+  val TAG = "com.xah.DataProvider"
+
   val CONTACTS = 100
   val CONTACT = 101
   val MESSAGES = 200
@@ -29,12 +31,14 @@ class DataProvider extends ContentProvider {
   override def onCreate() = {
     mContactsHelper = new ContactsHelper(getContext)
     mMessagesHelper = new MessagesHelper(getContext)
+    mContactsHelper.getWritableDatabase
+    mMessagesHelper.getWritableDatabase
     true
   }
 
   override def query(uri: Uri, projection: Array[String], selection: String, selectionArgs: Array[String], sortOrder: String): Cursor = {
     val queryBuilder = new SQLiteQueryBuilder()
-    val pathSegments = uri.getPathSegments()
+    val pathSegments = uri.getPathSegments
     val qb = new SQLiteQueryBuilder
     qb setTables getTablename(uri)
     val c = qb.query(getDb(uri), projection, selection, selectionArgs, null, null, sortOrder)
@@ -49,8 +53,8 @@ class DataProvider extends ContentProvider {
   }
 
   def getDb(uri: Uri) = matcher `match` uri match {
-    case CONTACTS | CONTACT => mContactsHelper.getWritableDatabase()
-    case MESSAGES | MESSAGE => mMessagesHelper.getWritableDatabase()
+    case CONTACTS | CONTACT => mContactsHelper.getWritableDatabase
+    case MESSAGES | MESSAGE => mMessagesHelper.getWritableDatabase
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
 
@@ -71,7 +75,6 @@ class DataProvider extends ContentProvider {
       else new ContentValues()
 
     val now = System.currentTimeMillis.toDouble
-
     val rowId = getDb(uri).insert(getTablename(uri), null, values)
     if (rowId > 0) {
       val retUri = ContentUris.withAppendedId(getContentUri(uri), rowId)
@@ -101,6 +104,9 @@ class DataProvider extends ContentProvider {
   override def update(uri: Uri, values: ContentValues,
                       where: String, whereArgs: Array[String]): Int = {
     val count = getDb(uri).update(getTablename(uri), values, where, whereArgs)
+    if (count == 0) {
+      insert(uri, values)
+    }
     getContext.getContentResolver.notifyChange(uri, null)
     count
   }

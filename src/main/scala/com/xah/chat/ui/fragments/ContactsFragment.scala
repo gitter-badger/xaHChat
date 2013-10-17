@@ -16,7 +16,7 @@ import android.util.Log
 class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Cursor] {
   var contacts_list: ListView = _
   var mAdapter: ContactsCursorAdapter = _
-  val TAG = "ContactsFragment"
+  val TAG = "com.xah.ContactsFragment"
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle) = {
     val view = inflater.inflate(R.layout.contacts_fragment, null)

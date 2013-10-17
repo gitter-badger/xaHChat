@@ -13,6 +13,7 @@ import scala.util.Success
 import scala.util.Failure
 
 class XService extends Service {
+
   private val TAG = "com.xah.chat/XService"
   private val brokerUrl = "tcp://chat.xah.co.za:1883"
   val mTopic = "xahcraft/out";
@@ -24,29 +25,40 @@ class XService extends Service {
   private val callback = new MqttCallback() {
     //Handles Mqtt message
     override def messageArrived(topic: String, message: MqttMessage) {
+      Log.i(TAG, new String(message.getPayload()))
       topic match {
         case mTopic => {
           val payload = new Payload(message)
           if (payload.isServer) {
             val values = new ContentValues()
             values.put(ContactFields.MCName.toString, payload.playerName)
-            values.put(ContactFields.ContactType.toString, ContactType.Server.id.toString)
-            val id = getApplicationContext.getContentResolver.update(
-              Contacts.CONTENT_URI, values, null, null
+            values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
+            getApplicationContext.getContentResolver.update(
+              Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
             )
+            val svalues = new ContentValues()
+            svalues.put(ContactFields.MCName.toString, payload.serverName)
+            svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+            getApplicationContext.getContentResolver.update(
+              Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
+            )
+            Log.d(TAG, s"Contacts URI: ${Contacts.CONTENT_URI}")
             val msgValues = new ContentValues()
             msgValues.put(MessageFields.MCName.toString, payload.playerName)
             msgValues.put(MessageFields.Message.toString, payload.message)
+            msgValues.put(MessageFields.ServerName.toString, payload.serverName)
+            msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)
             msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
             getApplicationContext.getContentResolver.insert(
               Messages.CONTENT_URI, msgValues
             )
+            Log.d(TAG, s"Messages URI: ${Messages.CONTENT_URI}")
           }
 
         }
         case _ => Log.e(TAG, "Unhandled topic: ${topic}")
       }
-      Log.i(TAG, new String(message.getPayload()))
+
     }
 
     override def deliveryComplete(arg0: IMqttDeliveryToken) {

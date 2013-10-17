@@ -5,7 +5,7 @@ import com.xah.chat.R
 import com.xah.chat.ui.fragments.ContactsFragment
 
 class MainActivity extends BaseActivity {
-  val TAG = "MainActivity"
+  val TAG = "com.xah.MainActivity"
 
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)

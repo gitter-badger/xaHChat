@@ -12,16 +12,15 @@ object Contacts {
   val _ID = BaseColumns._ID
   val _COUNT = BaseColumns._COUNT
   val TABLE_NAME = "Contacts"
-  final val CONTENT_URI = Uri.parse("content://" + xah.AUTHORITY + "/contacts")
+  final val CONTENT_URI = Uri.parse(s"content://${xah.AUTHORITY}/contacts")
   final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.contact"
   final val CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.xah.contact"
   final val DEFAULT_SORT_ORDER = "name DESC"
 }
 
-object ContactType extends Enumeration {
-  type Field = Value
-  val Server = Value(0)
-  val Player = Value(1)
+object ContactType {
+  val Server = 0
+  val Player = 1
 }
 
 object ContactFields extends Enumeration {
@@ -33,9 +32,8 @@ object ContactFields extends Enumeration {
 
 class Contact(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
 
-
 class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
-  val TAG = "ContactsHelper"
+  val TAG = "com.xah.ContactsHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
     val create = s"""
@@ -50,7 +48,7 @@ class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
   }
 
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-    val dropTable = "drop table if exists %s".format(Contacts.TABLE_NAME)
+    val dropTable = s"drop table if exists ${Contacts.TABLE_NAME}"
     db.execSQL(dropTable)
     onCreate(db)
   }
