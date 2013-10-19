@@ -18,11 +18,13 @@ class DataProvider extends ContentProvider {
   val CONTACT = 101
   val MESSAGES = 200
   val MESSAGE = 201
+  val MESSAGES_JOIN_CONTACTS = 202
 
   matcher.addURI(xah.AUTHORITY, "contacts", CONTACTS)
   matcher.addURI(xah.AUTHORITY, "contact/*", CONTACT)
   matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
+  matcher.addURI(xah.AUTHORITY, "messagesjoincontacts", MESSAGES_JOIN_CONTACTS)
 
   private var dbHelper: DBHelper = _
 
@@ -44,6 +46,8 @@ class DataProvider extends ContentProvider {
   def getTablename(uri: Uri) = matcher `match` uri match {
     case CONTACTS | CONTACT => Contacts.TABLE_NAME
     case MESSAGES | MESSAGE => Messages.TABLE_NAME
+    case MESSAGES_JOIN_CONTACTS =>
+      s"${Messages.TABLE_NAME} JOIN ${Contacts.TABLE_NAME} on ${Contacts.TABLE_NAME}.MCName = ${Messages.TABLE_NAME}.MCName "
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
 

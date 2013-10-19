@@ -32,11 +32,10 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
 
   override def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) = {
     if (mAdapter == null) {
-      mAdapter = new ContactsCursorAdapter(getActivity())
+      mAdapter = new ContactsCursorAdapter(getActivity)
     }
     contacts_list.setAdapter(mAdapter)
-    mAdapter.changeCursor(cursor);
-
+    mAdapter.changeCursor(cursor)
   }
 
   override def onLoaderReset(loader: Loader[Cursor]) = {
