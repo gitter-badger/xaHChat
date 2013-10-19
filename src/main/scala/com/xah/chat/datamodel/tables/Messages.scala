@@ -1,12 +1,10 @@
 package com.xah.chat.datamodel.tables
 
-import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
-import android.content.Context
 import java.sql.Timestamp
 import android.provider.BaseColumns
 import android.net.Uri
-import com.xah.chat.datamodel.xah
+import com.xah.chat.datamodel.{TableHelper, xah}
 import android.util.Log
 
 object MessageFields extends Enumeration {
@@ -34,7 +32,7 @@ object MessageType {
   val ServerMessage = 1
 }
 
-class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
+class MessagesHelper extends TableHelper {
   val TAG = "com.xah.MessagesHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
@@ -46,10 +44,10 @@ class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db
 				${MessageFields.MessageType} long,
 				${MessageFields.ServerName} Text,
 				${MessageFields.MessageId} long,
-				${MessageFields.Time} TIMESTAMP,
+				${MessageFields.Time} long,
 				${MessageFields.isSent} Boolean
 			)"""
-    Log.d(TAG, "create")
+    Log.d(TAG, create)
     db.execSQL(create)
   }
 

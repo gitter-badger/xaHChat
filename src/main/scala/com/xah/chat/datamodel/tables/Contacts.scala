@@ -1,9 +1,8 @@
 package com.xah.chat.datamodel.tables
 
-import android.database.sqlite.{SQLiteOpenHelper, SQLiteDatabase}
-import android.content.Context
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
-import com.xah.chat.datamodel.xah
+import com.xah.chat.datamodel.{TableHelper, xah}
 import android.provider.BaseColumns
 import android.util.Log
 
@@ -32,7 +31,7 @@ object ContactFields extends Enumeration {
 
 class Contact(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
 
-class ContactsHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
+class ContactsHelper extends TableHelper {
   val TAG = "com.xah.ContactsHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {

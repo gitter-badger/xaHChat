@@ -42,7 +42,7 @@ class XService extends Service {
             getApplicationContext.getContentResolver.update(
               Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
             )
-            Log.d(TAG, s"Contacts URI: ${Contacts.CONTENT_URI}")
+
             val msgValues = new ContentValues()
             msgValues.put(MessageFields.MCName.toString, payload.playerName)
             msgValues.put(MessageFields.Message.toString, payload.message)

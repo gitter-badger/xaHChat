@@ -5,7 +5,6 @@ import android.net.Uri
 import android.database.Cursor
 import android.database.sqlite.SQLiteQueryBuilder
 import android.content.UriMatcher
-import com.xah.chat.datamodel.tables.{ContactsHelper, MessagesHelper}
 import android.content.{ContentValues, ContentUris}
 import android.database.SQLException
 import com.xah.chat.datamodel.tables.Contacts
@@ -25,14 +24,10 @@ class DataProvider extends ContentProvider {
   matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
 
-  private var mContactsHelper: ContactsHelper = _
-  private var mMessagesHelper: MessagesHelper = _
+  private var dbHelper: DBHelper = _
 
   override def onCreate() = {
-    mContactsHelper = new ContactsHelper(getContext)
-    mMessagesHelper = new MessagesHelper(getContext)
-    mContactsHelper.getWritableDatabase
-    mMessagesHelper.getWritableDatabase
+    dbHelper = new DBHelper(getContext)
     true
   }
 
@@ -41,7 +36,7 @@ class DataProvider extends ContentProvider {
     val pathSegments = uri.getPathSegments
     val qb = new SQLiteQueryBuilder
     qb setTables getTablename(uri)
-    val c = qb.query(getDb(uri), projection, selection, selectionArgs, null, null, sortOrder)
+    val c = qb.query(getDb, projection, selection, selectionArgs, null, null, sortOrder)
     c.setNotificationUri(getContext.getContentResolver, uri)
     c
   }
@@ -52,11 +47,7 @@ class DataProvider extends ContentProvider {
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
 
-  def getDb(uri: Uri) = matcher `match` uri match {
-    case CONTACTS | CONTACT => mContactsHelper.getWritableDatabase
-    case MESSAGES | MESSAGE => mMessagesHelper.getWritableDatabase
-    case _ => throw new IllegalArgumentException("Unknown URI " + uri)
-  }
+  def getDb = dbHelper.getWritableDatabase
 
   def getContentUri(uri: Uri) = matcher `match` uri match {
     case CONTACTS => Contacts.CONTENT_URI
@@ -75,7 +66,7 @@ class DataProvider extends ContentProvider {
       else new ContentValues()
 
     val now = System.currentTimeMillis.toDouble
-    val rowId = getDb(uri).insert(getTablename(uri), null, values)
+    val rowId = getDb.insert(getTablename(uri), null, values)
     if (rowId > 0) {
       val retUri = ContentUris.withAppendedId(getContentUri(uri), rowId)
       getContext.getContentResolver.notifyChange(retUri, null)
@@ -85,8 +76,7 @@ class DataProvider extends ContentProvider {
   }
 
   override def delete(uri: Uri, where: String, whereArgs: Array[String]): Int = {
-    val db = getDb(uri)
-    val count = getDb(uri).delete(Contacts.TABLE_NAME, where, whereArgs)
+    val count = getDb.delete(Contacts.TABLE_NAME, where, whereArgs)
     getContext.getContentResolver.notifyChange(uri, null)
     count
   }
@@ -103,7 +93,7 @@ class DataProvider extends ContentProvider {
 
   override def update(uri: Uri, values: ContentValues,
                       where: String, whereArgs: Array[String]): Int = {
-    val count = getDb(uri).update(getTablename(uri), values, where, whereArgs)
+    val count = getDb.update(getTablename(uri), values, where, whereArgs)
     if (count == 0) {
       insert(uri, values)
     }
