@@ -11,6 +11,7 @@ import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
 import scala.util.Success
 import scala.util.Failure
+import org.json.JSONException
 
 class XService extends Service {
 
@@ -27,32 +28,35 @@ class XService extends Service {
     override def messageArrived(topic: String, message: MqttMessage) {
       Log.i(TAG, new String(message.getPayload()))
       topic match {
-        case mTopic => {
-          val payload = new Payload(message)
-          if (payload.isServer) {
-            val values = new ContentValues()
-            values.put(ContactFields.MCName.toString, payload.playerName)
-            values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
-            getApplicationContext.getContentResolver.update(
-              Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
-            )
-            val svalues = new ContentValues()
-            svalues.put(ContactFields.MCName.toString, payload.serverName)
-            svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
-            getApplicationContext.getContentResolver.update(
-              Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
-            )
+        case `mTopic` => {
+          try {
+            val payload = new Payload(message)
+            if (payload.isServer) {
+              val values = new ContentValues()
+              values.put(ContactFields.MCName.toString, payload.playerName)
+              values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
+              getApplicationContext.getContentResolver.update(
+                Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
+              )
+              val svalues = new ContentValues()
+              svalues.put(ContactFields.MCName.toString, payload.serverName)
+              svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+              getApplicationContext.getContentResolver.update(
+                Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
+              )
 
-            val msgValues = new ContentValues()
-            msgValues.put(MessageFields.MCName.toString, payload.playerName)
-            msgValues.put(MessageFields.Message.toString, payload.message)
-            msgValues.put(MessageFields.ServerName.toString, payload.serverName)
-            msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)
-            msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
-            getApplicationContext.getContentResolver.insert(
-              Messages.CONTENT_URI, msgValues
-            )
-            Log.d(TAG, s"Messages URI: ${Messages.CONTENT_URI}")
+              val msgValues = new ContentValues()
+              msgValues.put(MessageFields.MCName.toString, payload.playerName)
+              msgValues.put(MessageFields.Message.toString, payload.message)
+              msgValues.put(MessageFields.ServerName.toString, payload.serverName)
+              msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)
+              msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
+              getApplicationContext.getContentResolver.insert(
+                Messages.CONTENT_URI, msgValues
+              )
+            }
+          } catch {
+            case e: JSONException => Log.w(TAG, "JSON error occured", e)
           }
 
         }
@@ -84,7 +88,6 @@ class XService extends Service {
     mBinder = new XBinder(this)
     future {
       Log.i(TAG, "about to connect")
-
       // mqtt client with specific url and client id
       client = new MqttClient(brokerUrl, "ThisClient", peristance)
       val mOpts = new MqttConnectOptions
@@ -107,7 +110,6 @@ class XService extends Service {
         }
       }
     }
-
     mBinder
   }
 }
