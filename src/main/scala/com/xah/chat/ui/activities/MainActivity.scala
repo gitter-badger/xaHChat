@@ -12,12 +12,12 @@ class MainActivity extends BaseActivity {
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)
     setContentView(R.layout.activity_main)
-    if ((currentFragment = getFragmentManager.findFragmentById(R.id.content_frame)) == null) {
-      currentFragment = new ContactsFragment
-      getFragmentManager.beginTransaction
-        .add(R.id.content_frame, currentFragment)
-        .commit
-    }
+    //if ((currentFragment = getFragmentManager.findFragmentById(R.id.content_frame)) == null) {
+    currentFragment = new ContactsFragment
+    getFragmentManager.beginTransaction
+      .add(R.id.content_frame, currentFragment)
+      .commit
+    //}
   }
 }
 

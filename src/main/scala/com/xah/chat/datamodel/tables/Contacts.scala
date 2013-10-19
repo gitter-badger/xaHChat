@@ -24,7 +24,7 @@ object ContactType {
 
 object ContactFields extends Enumeration {
   type Field = Value
-  val _ID, MCName, Status, ContactType = Value
+  val _ID, MCName, Status, SubType, ContactType = Value
   val projection =
     (for (v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
 }
@@ -40,6 +40,7 @@ class ContactsHelper extends TableHelper {
 				${BaseColumns._ID} integer primary key autoincrement,
 				${ContactFields.MCName} Text,
 				${ContactFields.Status} Text,
+				${ContactFields.SubType} Text,
 				${ContactFields.ContactType} long
 			)"""
     Log.d(TAG, create)
