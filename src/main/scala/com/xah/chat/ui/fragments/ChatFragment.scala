@@ -8,9 +8,10 @@ import android.app.LoaderManager
 import android.database.Cursor
 import android.content.{ContentValues, CursorLoader, Loader}
 import com.xah.chat.ui.adapters.ChatCursorAdapter
-import android.widget.{Button, EditText, ListView}
+import android.widget.{AbsListView, Button, EditText, ListView}
 import android.view.View.OnClickListener
 import com.xah.chat.datamodel.xah
+import android.widget.AbsListView.OnScrollListener
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,6 +22,8 @@ import com.xah.chat.datamodel.xah
 class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Cursor] {
   var mAdapter: ChatCursorAdapter = _
   var chatList: ListView = _
+  var firstOpen = true
+  var listBottom = true
 
   implicit def funToRunnable(f: () => Unit) = new Runnable {
     def run() {
@@ -45,6 +48,21 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
 
     val chatText = view.findViewById(R.id.chat_text).asInstanceOf[EditText]
     val send = view.findViewById(R.id.send_chat).asInstanceOf[Button]
+
+    chatList.setOnScrollListener(new OnScrollListener {
+      def onScrollStateChanged(p1: AbsListView, p2: Int) {
+
+      }
+
+      def onScroll(lv: AbsListView, firstVisible: Int, visibleCount: Int, totalItems: Int) {
+        lv.getId() match {
+          case R.id.chat_list => {
+            val lastItem = firstVisible + visibleCount;
+            listBottom = lastItem == totalItems
+          }
+        }
+      }
+    })
 
     send.setOnClickListener((v: View) => {
       val msg = chatText.getText.toString
@@ -75,12 +93,34 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
   }
 
   def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) {
+    // save index and top position
+
+    var index: Int = -1
+    var top: Int = -1
+    runOnUi(() => {
+      index = chatList.getFirstVisiblePosition
+      val v = chatList.getChildAt(0)
+      top = if (v == null) 0 else v.getTop
+    })
+
+    // ...
+    // restore
+
     if (mAdapter == null) {
       mAdapter = new ChatCursorAdapter(getActivity)
     }
     chatList.setAdapter(mAdapter)
     mAdapter.changeCursor(cursor)
-    runOnUi(() => chatList.setSelection(chatList.getCount - 1))
+    runOnUi(() => {
+      if (firstOpen) {
+        chatList.setSelection(chatList.getCount - 1)
+        firstOpen = false
+      } else if (listBottom) {
+        chatList.setSelection(chatList.getCount - 1)
+      } else {
+        chatList.setSelectionFromTop(index, top);
+      }
+    })
   }
 
   def onCreateLoader(id: Int, data: Bundle): Loader[Cursor] = {
@@ -90,6 +130,10 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
         case ContactType.Player => MessageFields.MCName
         case ContactType.Server => MessageFields.ServerName
       }} = ?""", Array(getArguments.getString("chat_name")), null)
+
+  }
+
+  override def onSaveInstanceState(outState: Bundle) {
 
   }
 }
