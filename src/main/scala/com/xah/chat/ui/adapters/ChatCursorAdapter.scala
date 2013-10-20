@@ -8,6 +8,7 @@ import android.view.{View, ViewGroup}
 import com.xah.chat.datamodel.tables.{MessageFields, ContactFields}
 import com.xah.chat.R
 import com.squareup.picasso.Picasso
+import com.xah.chat.datamodel.xah
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso
 class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, false) {
   val layoutInflater = context.getLayoutInflater
   val TAG = "com.xah.ChatCursorAdapter"
+  val MCName = xah.MCName(context)
 
   implicit def messageValueToString(v: MessageFields.Value) = v.toString
 
@@ -43,7 +45,7 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
   }
 
   def getItemViewType(cursor: Cursor): Int = {
-    if (cursor.getString(cursor.getColumnIndex(MessageFields.MCName)) == "lemonxah") {
+    if (cursor.getString(cursor.getColumnIndex(MessageFields.MCName)) == MCName) {
       0
     } else {
       1

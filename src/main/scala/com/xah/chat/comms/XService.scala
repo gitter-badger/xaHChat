@@ -15,6 +15,7 @@ import org.json.{JSONObject, JSONException}
 import java.security.MessageDigest
 import scala.Predef.String
 import com.xah.chat.utils.JavaUtils
+import com.xah.chat.datamodel.xah
 
 class XService extends Service {
 
@@ -93,7 +94,7 @@ class XService extends Service {
     crypt.reset()
     crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
     val json: JSONObject = new JSONObject
-    json.put("sender", "lemonxah")
+    json.put("sender", xah.MCName(getApplicationContext))
     json.put("isServer", false)
     json.put("message", msg.replace("\"", "'"))
     json.put("messageId", JavaUtils.bytesToHex(crypt.digest()))
@@ -111,7 +112,7 @@ class XService extends Service {
     future {
       Log.i(TAG, "about to connect")
       // mqtt client with specific url and client id
-      client = new MqttClient(brokerUrl, "MyOwnClient", peristance)
+      client = new MqttClient(brokerUrl, xah.MCName(getApplicationContext), peristance)
       val mOpts = new MqttConnectOptions
       mOpts.setCleanSession(false)
       mOpts.setUserName("xahchat")

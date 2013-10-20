@@ -10,6 +10,7 @@ import android.content.{ContentValues, CursorLoader, Loader}
 import com.xah.chat.ui.adapters.ChatCursorAdapter
 import android.widget.{Button, EditText, ListView}
 import android.view.View.OnClickListener
+import com.xah.chat.datamodel.xah
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,7 +51,7 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
       val json = mService.send(msg)
       chatText.setText("")
       val msgValues = new ContentValues()
-      msgValues.put(MessageFields.MCName.toString, "lemonxah")
+      msgValues.put(MessageFields.MCName.toString, xah.MCName(getActivity))
       msgValues.put(MessageFields.Message.toString, msg)
       msgValues.put(MessageFields.ServerName.toString, "xaHCraft")
       msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)

@@ -3,11 +3,16 @@ package com.xah.chat.ui.activities
 import android.app.Activity
 import android.os.Bundle
 import com.xah.chat.R
+import scala.concurrent._
 import android.widget.{Button, EditText}
 import android.view.View
 import android.view.View.OnClickListener
 import java.net.URL
 import java.util.Scanner
+import android.util.Log
+import scala.concurrent.ExecutionContext.Implicits.global
+import com.xah.chat.datamodel.xah
+import android.content.{Intent, Context}
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,28 +25,52 @@ import java.util.Scanner
 class LoginActivity extends Activity {
   val TAG = "com.xah.LoginActivity"
 
+  implicit def funToRunnable(f: () => Unit) = new Runnable {
+    def run() {
+      f()
+    }
+  }
+
   implicit def funToOnClick[T](f: View => T) = new OnClickListener {
     def onClick(v: View) {
       f(v)
     }
   }
 
+  def runOnUi(action: Runnable) {
+    runOnUiThread(action)
+  }
+
   override def onCreate(savedInstanceState: Bundle) {
+    super.onCreate(savedInstanceState)
     setContentView(R.layout.login_activity)
     val username = findViewById(R.id.username).asInstanceOf[EditText]
     val password = findViewById(R.id.password).asInstanceOf[EditText]
     val login = findViewById(R.id.login).asInstanceOf[Button]
 
     login.setOnClickListener((v: View) => {
-      login.setEnabled(false)
-      val connection = new URL(s"http://login.minecraft.net/?user=${username.getText}&password=${password.getText}&version=13").openConnection
-      connection.setConnectTimeout(3000)
-      connection.setReadTimeout(4000)
-      connection.connect
-      val scanner = new Scanner(connection.getInputStream).useDelimiter("\\A")
-      val response = if (scanner.hasNext) scanner.next else ""
+      future {
+        runOnUi(() => login.setEnabled(false))
+        val connection = new URL(s"http://login.minecraft.net/?user=${username.getText}&password=${password.getText}&version=13").openConnection
+        connection.setConnectTimeout(3000)
+        connection.setReadTimeout(4000)
+        connection.connect()
+        val scanner = new Scanner(connection.getInputStream).useDelimiter("\\A")
+        val response = if (scanner.hasNext) scanner.next else ""
+        if (response.length > 70) {
+          val mcname = response.split(":")(2)
+          val prefs = getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE)
+          prefs.edit()
+            .putString(xah.PREF_MCNAME, mcname)
+            .commit()
+          val intent = new Intent(this, classOf[MainActivity])
+          startActivity(intent)
+          this.finish()
+        }
 
-      login.setEnabled(true)
+        Log.i(TAG, response)
+        runOnUi(() => login.setEnabled(true))
+      }
     })
   }
 }
