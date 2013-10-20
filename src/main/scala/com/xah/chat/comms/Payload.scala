@@ -12,10 +12,11 @@ import java.lang.String
  */
 class Payload(msg: MqttMessage) {
   val obj = new JSONObject(new String(msg.getPayload()))
-  val sender = obj.getString("sender")
-  val isServer = obj.getBoolean("isServer")
-  val serverName = obj.getString("serverName")
-  val playerName = obj.getString("player")
-  val message = obj.getString("message")
-  val messageId = obj.getLong("messageId")
+  val sender = if (obj.has("sender")) obj.getString("sender") else ""
+  val isServer = if (obj.has("isServer")) obj.getBoolean("isServer") else false
+  val serverName = if (obj.has("serverName")) obj.getString("serverName") else ""
+  val playerName = if (obj.has("player")) obj.getString("player") else ""
+  val message = if (obj.has("message")) obj.getString("message") else ""
+  val messageId = if (obj.has("messageId")) obj.getString("messageId") else ""
+  val timestamp = if (obj.has("timestamp")) obj.getLong("timestamp") else -1
 }

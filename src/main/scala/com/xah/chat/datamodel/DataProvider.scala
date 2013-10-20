@@ -24,7 +24,7 @@ class DataProvider extends ContentProvider {
   matcher.addURI(xah.AUTHORITY, "contact/*", CONTACT)
   matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
-  matcher.addURI(xah.AUTHORITY, "messagesjoincontacts", MESSAGES_JOIN_CONTACTS)
+  matcher.addURI(xah.AUTHORITY, "messages/contacts", MESSAGES_JOIN_CONTACTS)
 
   private var dbHelper: DBHelper = _
 
@@ -73,7 +73,8 @@ class DataProvider extends ContentProvider {
     val rowId = getDb.insert(getTablename(uri), null, values)
     if (rowId > 0) {
       val retUri = ContentUris.withAppendedId(getContentUri(uri), rowId)
-      getContext.getContentResolver.notifyChange(retUri, null)
+      getContext.getContentResolver.notifyChange(uri, null)
+      getContext.getContentResolver.notifyChange(Messages.MESSAGES_JOIN_CONTACTS_URI, null)
       retUri
     } else
       throw new SQLException("Failed to insert row into " + uri)

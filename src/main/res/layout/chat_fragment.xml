@@ -7,8 +7,28 @@
 
     <ListView
             android:id="@+id/chat_list"
+            android:layout_above="@+id/chatbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="fill_parent"/>
 
+    <LinearLayout
+            android:background="#f5f5f5"
+            android:id="@+id/chatbar"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+        <EditText
+                android:hint="Enter text here to send"
+                android:id="@+id/chat_text"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <Button android:id="@+id/send_chat"
+                android:text="send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
 </RelativeLayout>

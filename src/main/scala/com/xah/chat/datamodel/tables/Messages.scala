@@ -6,6 +6,7 @@ import android.provider.BaseColumns
 import android.net.Uri
 import com.xah.chat.datamodel.{TableHelper, xah}
 import android.util.Log
+import scala.language.implicitConversions
 
 object MessageFields extends Enumeration {
   type Field = Value
@@ -22,7 +23,7 @@ object Messages {
   val _COUNT = BaseColumns._COUNT
   val TABLE_NAME = "Messages"
   final val CONTENT_URI = Uri.parse(s"content://${xah.AUTHORITY}/messages")
-  final val MESSAGES_JOIN_CONTACTS_URI = Uri.parse(s"content://${xah.AUTHORITY}/messagesjoincontacts")
+  final val MESSAGES_JOIN_CONTACTS_URI = CONTENT_URI.buildUpon().appendPath("contacts").build()
   final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.message"
   final val CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.xah.message"
   final val DEFAULT_SORT_ORDER = "Time DESC"
@@ -44,7 +45,7 @@ class MessagesHelper extends TableHelper {
 				${MessageFields.Message} Text,
 				${MessageFields.MessageType} long,
 				${MessageFields.ServerName} Text,
-				${MessageFields.MessageId} long,
+				${MessageFields.MessageId} Text,
 				${MessageFields.Time} long,
 				${MessageFields.isSent} Boolean
 			)"""

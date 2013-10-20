@@ -8,7 +8,7 @@ import android.widget.ListView
 import android.app.LoaderManager
 import android.database.Cursor
 import android.content.Loader
-import com.xah.chat.datamodel.tables.{Contacts, ContactFields}
+import com.xah.chat.datamodel.tables.{ContactType, Contacts, ContactFields}
 import android.content.CursorLoader
 import com.xah.chat.ui.adapters.ContactsCursorAdapter
 import android.util.Log
@@ -27,7 +27,8 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
 
   override def onCreateLoader(id: Int, data: Bundle) = {
     Log.d(TAG, ContactFields.projection.toString)
-    new CursorLoader(getActivity(), Contacts.CONTENT_URI, ContactFields.projection, null, null, null)
+    new CursorLoader(getActivity(), Contacts.CONTENT_URI,
+      ContactFields.projection, s"${ContactFields.ContactType} = ${ContactType.Server}", null, null)
   }
 
   override def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) = {

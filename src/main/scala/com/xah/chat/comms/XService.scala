@@ -11,7 +11,10 @@ import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
 import scala.util.Success
 import scala.util.Failure
-import org.json.JSONException
+import org.json.{JSONObject, JSONException}
+import java.security.MessageDigest
+import scala.Predef.String
+import com.xah.chat.utils.JavaUtils
 
 class XService extends Service {
 
@@ -51,8 +54,9 @@ class XService extends Service {
               msgValues.put(MessageFields.ServerName.toString, payload.serverName)
               msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)
               msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
-              getApplicationContext.getContentResolver.insert(
-                Messages.CONTENT_URI, msgValues
+              msgValues.put(MessageFields.Time.toString, payload.timestamp.toString)
+              getApplicationContext.getContentResolver.update(
+                Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${payload.messageId}'", null
               )
             }
           } catch {
@@ -84,12 +88,30 @@ class XService extends Service {
     true
   }
 
+  def send(msg: String): Payload = {
+    val crypt: MessageDigest = MessageDigest.getInstance("SHA-1")
+    crypt.reset()
+    crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
+    val json: JSONObject = new JSONObject
+    json.put("sender", "lemonxah")
+    json.put("isServer", false)
+    json.put("message", msg.replace("\"", "'"))
+    json.put("messageId", JavaUtils.bytesToHex(crypt.digest()))
+    json.put("timestamp", System.currentTimeMillis)
+    val text: String = json.toString
+    val topic = client.getTopic("xahcraft/in")
+    val message: MqttMessage = new MqttMessage(text.getBytes)
+    topic.publish(message)
+    new Payload(message)
+  }
+
+
   override def onBind(intent: Intent): IBinder = {
     mBinder = new XBinder(this)
     future {
       Log.i(TAG, "about to connect")
       // mqtt client with specific url and client id
-      client = new MqttClient(brokerUrl, "ThisClient", peristance)
+      client = new MqttClient(brokerUrl, "MyOwnClient", peristance)
       val mOpts = new MqttConnectOptions
       mOpts.setCleanSession(false)
       mOpts.setUserName("xahchat")

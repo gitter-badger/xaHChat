@@ -10,7 +10,7 @@ import com.xah.chat.datamodel.tables.{MessagesHelper, ContactsHelper}
  * Date: 2013/10/19
  * Time: 3:32 PM
  */
-class DBHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 1) {
+class DBHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 2) {
   val tables = new ContactsHelper :: new MessagesHelper :: List()
 
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
