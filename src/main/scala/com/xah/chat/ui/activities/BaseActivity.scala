@@ -7,6 +7,12 @@ import android.content.{Context, Intent}
 class BaseActivity extends Activity {
   val mConnection = new XServiceConnection
 
+  protected def runOnUi(action: Runnable) = this.runOnUiThread(action)
+
+  implicit def funToRunnable(fun: () => Unit): Runnable = new Runnable {
+    def run() = fun()
+  }
+
   override def onStart() = {
     super.onStart()
     bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
