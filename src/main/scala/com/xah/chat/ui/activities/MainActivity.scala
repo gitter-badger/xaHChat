@@ -12,7 +12,7 @@ class MainActivity extends BaseActivity {
   var MCName: String = _
 
   override def onCreate(data: Bundle): Unit = {
-    super.onCreate(data)
+
     if (TextUtils.isEmpty(MCName)) MCName = xah.MCName(this)
     val prefs = getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE)
     if (!prefs.contains(xah.PREF_MCNAME) || TextUtils.isEmpty(MCName)) {
@@ -22,7 +22,7 @@ class MainActivity extends BaseActivity {
     } else {
       if (xah.MCName(this) == "") this.finish()
     }
-
+    super.onCreate(data)
     setContentView(R.layout.activity_main)
     if (getFragmentManager.findFragmentById(R.id.content_frame) == null) {
       getFragmentManager.beginTransaction

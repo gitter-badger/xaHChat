@@ -30,8 +30,10 @@ object Messages {
 }
 
 object MessageType {
-  val PlayerMessage = 0
-  val ServerMessage = 1
+  val NormalMessage = 0
+  val CommandMessage = 1
+  val FeedMessage = 2
+  val ServerMessage = 3
 }
 
 class MessagesHelper extends TableHelper {

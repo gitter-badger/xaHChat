@@ -21,12 +21,27 @@
             android:gravity="right"
             android:id="@+id/chat_text"
             android:layout_toLeftOf="@+id/avatar"
-            android:layout_marginTop="5dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
             android:layout_width="fill_parent"
+            android:fontFamily="sans-serif"
             android:layout_height="wrap_content"
             android:textColor="?android:textColorPrimary"
-            android:text="A very very long chat message but you will have to see it first hand that there is a message here thnx very much ok then later :)"/>
+            android:text="A very very long chat message but you will have to see it first hand that there is a message here thnx very much ok then later :)A very very long chat message but you will have to see it first hand that there is a message here thnx very much ok then later :)"/>
+
+    <TextView
+            android:id="@+id/chat_sub"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_toLeftOf="@+id/avatar"
+            android:layout_below="@+id/chat_text"
+            android:fontFamily="sans-serif"
+            android:textStyle="italic|"
+            android:textSize="12dp"
+            android:text="lemonxah at 20:45"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"/>
 
 </RelativeLayout>

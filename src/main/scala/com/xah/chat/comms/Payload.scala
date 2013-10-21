@@ -18,5 +18,6 @@ class Payload(msg: MqttMessage) {
   val playerName = if (obj.has("player")) obj.getString("player") else ""
   val message = if (obj.has("message")) obj.getString("message") else ""
   val messageId = if (obj.has("messageId")) obj.getString("messageId") else ""
+  val messageType = if (obj.has("messageType")) obj.getLong("messageType") else 0
   val timestamp = if (obj.has("timestamp")) obj.getLong("timestamp") else -1
 }

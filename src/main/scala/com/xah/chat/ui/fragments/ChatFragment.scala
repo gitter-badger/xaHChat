@@ -66,18 +66,21 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
 
     send.setOnClickListener((v: View) => {
       val msg = chatText.getText.toString
-      val json = mService.send(msg)
+      val json = mService.send(msg, s"${getArguments.getString("chat_name")}/in".toLowerCase)
       chatText.setText("")
       val msgValues = new ContentValues()
       msgValues.put(MessageFields.MCName.toString, xah.MCName(getActivity))
       msgValues.put(MessageFields.Message.toString, msg)
-      msgValues.put(MessageFields.ServerName.toString, "xaHCraft")
-      msgValues.put(MessageFields.MessageType.toString, MessageType.ServerMessage.toString)
+      if (getArguments.getInt("contact_type") == ContactType.Server) {
+        msgValues.put(MessageFields.ServerName.toString, getArguments.getString("chat_name"))
+      }
+      msgValues.put(MessageFields.MessageType.toString, MessageType.NormalMessage.toString)
       msgValues.put(MessageFields.MessageId.toString, json.messageId)
       msgValues.put(MessageFields.Time.toString, json.timestamp.toString)
       getActivity.getContentResolver.update(
         Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${json.messageId}'", null
       )
+      chatList.setSelection(chatList.getCount - 1)
     })
 
     getArguments.getInt("contact_type") match {
