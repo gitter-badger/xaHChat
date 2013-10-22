@@ -2,20 +2,21 @@ package com.xah.chat.comms
 
 import android.os.IBinder
 import android.app.Service
-import android.content.{ContentValues, Intent}
+import android.content._
 import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
-import scala.util.Success
-import scala.util.Failure
 import org.json.{JSONObject, JSONException}
 import java.security.MessageDigest
 import com.xah.chat.utils.JavaUtils
 import com.xah.chat.datamodel.xah
 import scala.collection.mutable
+import android.net.ConnectivityManager
+import scala.util.Failure
+import scala.util.Success
 
 class XService extends Service {
 
@@ -27,12 +28,40 @@ class XService extends Service {
   private val RECONNECTING = 3
 
   private var connectionState = DISCONNECTED
+
+  private val NETWORK_UNAVAILABLE = 0
+  private val NETWORK_AVAILABLE = 1
+
+  private var networkState = NETWORK_UNAVAILABLE
+
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
   val mTopic = "xahcraft/out";
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
   private val peristance = new MemoryPersistence();
+
+
+  class ConnectivityReceiver extends BroadcastReceiver {
+    def onReceive(context: Context, intent: Intent) {
+      intent.getAction match {
+        case ConnectivityManager.CONNECTIVITY_ACTION => {
+          Log.d(TAG, s"old network State ${networkState match {
+            case NETWORK_UNAVAILABLE => "unavailable"
+            case NETWORK_AVAILABLE => "available"
+          }}")
+          updateNetworkState()
+          Log.d(TAG, s"new network State ${networkState match {
+            case NETWORK_UNAVAILABLE => "unavailable"
+            case NETWORK_AVAILABLE => "available"
+          }}")
+          if (networkState == NETWORK_AVAILABLE) connect()
+        }
+      }
+    }
+  }
+
+
   //Callback automatically triggers as and when new message arrives on specified topic
   private val callback = new MqttCallback() {
     //Handles Mqtt message
@@ -83,7 +112,7 @@ class XService extends Service {
     override def connectionLost(thrown: Throwable) {
       connectionState = RECONNECTING
       Thread.sleep(2000)
-      connect()
+      if (networkState == NETWORK_AVAILABLE) connect()
     }
   }
   //Initializing Mqtt Client specifying brokerUrl, clientID and MqttClientPersistance
@@ -96,7 +125,11 @@ class XService extends Service {
 
   override def onStartCommand(intent: Intent, flags: Int, startId: Int): Int = {
     Log.d(TAG, "Entering from onStartCommand")
-    connect()
+    updateNetworkState()
+    val filter = new IntentFilter()
+    filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION)
+    getApplicationContext.registerReceiver(new ConnectivityReceiver, filter)
+    if (networkState == NETWORK_AVAILABLE) connect()
     Service.START_STICKY
   }
 
@@ -124,7 +157,7 @@ class XService extends Service {
     try {
       if (connectionState != CONNECTED) {
         enqueueMessage(message -> topic)
-        connect()
+        if (networkState == NETWORK_AVAILABLE) connect()
       } else {
         Log.d(TAG, s"publish on $topic :: ${message.getPayload.toString}")
         client.getTopic(topic).publish(message)
@@ -132,17 +165,18 @@ class XService extends Service {
     } catch {
       case e: Exception => {
         enqueueMessage(message -> topic)
-        connect()
+        if (networkState == NETWORK_AVAILABLE) connect()
       }
     }
     new Payload(message)
   }
 
   def connect() {
-    if (connectionState == DISCONNECTED || connectionState == RECONNECTING) {
+    if (networkState == NETWORK_AVAILABLE &&
+      (connectionState == DISCONNECTED || connectionState == RECONNECTING)) {
       future {
         connectionState = CONNECTING
-        Log.i(TAG, "about to connect")
+        Log.i(TAG, "connecting")
         // mqtt client with specific url and client id
         if (client == null) {
           client = new MqttClient(brokerUrl, xah.MCName(getApplicationContext), peristance)
@@ -185,15 +219,26 @@ class XService extends Service {
           connectionState = DISCONNECTED
           Log.e(TAG, s"ReasonCode: ${e.getReasonCode}, Message: ${e.getMessage}")
           Thread.sleep(1000)
-          connect()
+          if (networkState == NETWORK_AVAILABLE) connect()
         }
       }
     }
   }
 
+  def updateNetworkState() {
+    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE).asInstanceOf[ConnectivityManager]
+    val activeNetworkInfo = connectivityManager.getActiveNetworkInfo
+    networkState = activeNetworkInfo != null && activeNetworkInfo.isConnected match {
+      case true => NETWORK_AVAILABLE
+      case false => NETWORK_UNAVAILABLE
+    }
+  }
+
   override def onBind(intent: Intent): IBinder = {
     mBinder = new XBinder(this)
-    if (connectionState == DISCONNECTED) connect()
+    if (connectionState == DISCONNECTED) {
+      if (networkState == NETWORK_AVAILABLE) connect()
+    }
     mBinder
   }
 }
