@@ -155,6 +155,15 @@ class XService extends Service {
         client.setCallback(callback)
         client.subscribe(mTopic.toLowerCase, 2)
         client.subscribe(s"${xah.MCName(getApplicationContext)}/in".toLowerCase, 2)
+
+        //TODO: remove this section when servers list is implemented
+        val svalues = new ContentValues()
+        svalues.put(ContactFields.MCName.toString, "xaHCraft")
+        svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+        getApplicationContext.getContentResolver.update(
+          Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = 'xaHCraft'", null
+        )
+
       } onComplete {
         case Success(t) => {
           connectionState = CONNECTED

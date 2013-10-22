@@ -6,13 +6,14 @@ import com.xah.chat.ui.fragments.ContactsFragment
 import com.xah.chat.datamodel.xah
 import android.content.{Intent, Context}
 import android.text.TextUtils
+import com.xah.chat.comms.XService
 
 class MainActivity extends BaseActivity {
   val TAG = "com.xah.MainActivity"
   var MCName: String = _
 
   override def onCreate(data: Bundle): Unit = {
-
+    super.onCreate(data)
     if (TextUtils.isEmpty(MCName)) MCName = xah.MCName(this)
     val prefs = getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE)
     if (!prefs.contains(xah.PREF_MCNAME) || TextUtils.isEmpty(MCName)) {
@@ -20,9 +21,9 @@ class MainActivity extends BaseActivity {
       startActivity(intent)
       this.finish()
     } else {
-      if (xah.MCName(this) == "") this.finish()
+      startService(new Intent(this, classOf[XService]))
     }
-    super.onCreate(data)
+
     setContentView(R.layout.activity_main)
     if (getFragmentManager.findFragmentById(R.id.content_frame) == null) {
       getFragmentManager.beginTransaction
