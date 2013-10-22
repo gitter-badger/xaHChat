@@ -35,7 +35,8 @@ class XService extends Service {
   private var networkState = NETWORK_UNAVAILABLE
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
-  val mTopic = "xahcraft/out";
+  //val mTopic = "xahcraft/out"
+  val serverListTopic = "serverlist/retained"
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
@@ -61,29 +62,29 @@ class XService extends Service {
     }
   }
 
-
   //Callback automatically triggers as and when new message arrives on specified topic
   private val callback = new MqttCallback() {
     //Handles Mqtt message
     override def messageArrived(topic: String, message: MqttMessage) {
       Log.i(TAG, new String(message.getPayload()))
-      topic match {
-        case `mTopic` => {
-          try {
-            val payload = new Payload(message)
+      try {
+        val payload = new Payload(message)
+        payload.messageType match {
+          case MessageType.NormalMessage | MessageType.FeedMessage => {
             if (payload.isServer) {
-              val values = new ContentValues()
-              values.put(ContactFields.MCName.toString, payload.playerName)
-              values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
-              getApplicationContext.getContentResolver.update(
-                Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
-              )
-              val svalues = new ContentValues()
-              svalues.put(ContactFields.MCName.toString, payload.serverName)
-              svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
-              getApplicationContext.getContentResolver.update(
-                Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
-              )
+              //              val values = new ContentValues()
+              //              values.put(ContactFields.MCName.toString, payload.playerName)
+              //              values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
+              //              getApplicationContext.getContentResolver.update(
+              //                Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
+              //              )
+              //
+              //              val svalues = new ContentValues()
+              //              svalues.put(ContactFields.MCName.toString, payload.serverName)
+              //              svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+              //              getApplicationContext.getContentResolver.update(
+              //                Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
+              //              )
 
               val msgValues = new ContentValues()
               msgValues.put(MessageFields.MCName.toString, payload.playerName)
@@ -96,14 +97,22 @@ class XService extends Service {
                 Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${payload.messageId}'", null
               )
             }
-          } catch {
-            case e: JSONException => Log.w(TAG, "JSON error occured", e)
           }
-
+          case MessageType.SublistMessage => {
+            val sv = new ContentValues()
+            sv.put(ContactFields.MCName.toString, payload.serverName)
+            sv.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+            sv.put(ContactFields.Status.toString, payload.serverIp)
+            sv.put(ContactFields.ServerPassword.toString, payload.serverPassword)
+            getApplicationContext.getContentResolver.update(
+              Contacts.CONTENT_URI, sv, s"${ContactFields.MCName} = '${payload.serverName}'", null
+            )
+          }
+          case _ => Log.e(TAG, s"Unhandled MessageType: ${payload.messageType}")
         }
-        case _ => Log.e(TAG, "Unhandled topic: ${topic}")
+      } catch {
+        case e: JSONException => Log.w(TAG, "JSON error occured", e)
       }
-
     }
 
     override def deliveryComplete(arg0: IMqttDeliveryToken) {
@@ -131,6 +140,18 @@ class XService extends Service {
     getApplicationContext.registerReceiver(new ConnectivityReceiver, filter)
     if (networkState == NETWORK_AVAILABLE) connect()
     Service.START_STICKY
+  }
+
+  def subscribe(topic: String) {
+    if (client != null && client.isConnected) {
+      client.subscribe(topic)
+    }
+  }
+
+  def unsubscribe(topic: String) {
+    if (client != null && client.isConnected) {
+      client.unsubscribe(topic)
+    }
   }
 
   override def onUnbind(intent: Intent): Boolean = {
@@ -187,7 +208,7 @@ class XService extends Service {
         mOpts.setPassword("!xahchat!".toCharArray)
         client.connect(mOpts)
         client.setCallback(callback)
-        client.subscribe(mTopic.toLowerCase, 2)
+        client.subscribe(serverListTopic.toLowerCase, 2)
         client.subscribe(s"${xah.MCName(getApplicationContext)}/in".toLowerCase, 2)
 
         //TODO: remove this section when servers list is implemented

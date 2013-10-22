@@ -19,6 +19,7 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
   val TAG = "com.xah.ContactsFragment"
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle) = {
+    getActivity.getActionBar.setTitle("Server List")
     val view = inflater.inflate(R.layout.contacts_fragment, null)
     contacts_list = view.findViewById(R.id.contacts_list).asInstanceOf[ListView]
     getLoaderManager().initLoader(0, null, this)

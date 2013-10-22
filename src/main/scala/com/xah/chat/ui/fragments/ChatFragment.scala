@@ -43,11 +43,17 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View = {
     getActivity.getActionBar.setTitle(getArguments.getString("chat_name"))
+
     val view = inflater.inflate(R.layout.chat_fragment, container, false)
     chatList = view.findViewById(R.id.chat_list).asInstanceOf[ListView]
 
     val chatText = view.findViewById(R.id.chat_text).asInstanceOf[EditText]
     val send = view.findViewById(R.id.send_chat).asInstanceOf[Button]
+
+    getArguments.getInt("contact_type") match {
+      case ContactType.Server => mService.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
+      case ContactType.Player =>
+    }
 
     chatList.setOnScrollListener(new OnScrollListener {
       def onScrollStateChanged(p1: AbsListView, p2: Int) {
@@ -83,10 +89,6 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
       chatList.setSelection(chatList.getCount - 1)
     })
 
-    getArguments.getInt("contact_type") match {
-      case ContactType.Player =>
-      case ContactType.Server =>
-    }
     getLoaderManager.initLoader(0, null, this)
     view
   }

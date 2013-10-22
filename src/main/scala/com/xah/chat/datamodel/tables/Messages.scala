@@ -34,6 +34,7 @@ object MessageType {
   val CommandMessage = 1
   val FeedMessage = 2
   val ServerMessage = 3
+  val SublistMessage = 4
 }
 
 class MessagesHelper extends TableHelper {

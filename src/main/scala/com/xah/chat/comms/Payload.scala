@@ -15,6 +15,8 @@ class Payload(msg: MqttMessage) {
   val sender = if (obj.has("sender")) obj.getString("sender") else ""
   val isServer = if (obj.has("isServer")) obj.getBoolean("isServer") else false
   val serverName = if (obj.has("serverName")) obj.getString("serverName") else ""
+  val serverPassword = if (obj.has("serverPassword")) obj.getString("serverPassword") else ""
+  val serverIp = if (obj.has("serverIp")) obj.getString("serverIp") else ""
   val playerName = if (obj.has("player")) obj.getString("player") else ""
   val message = if (obj.has("message")) obj.getString("message") else ""
   val messageId = if (obj.has("messageId")) obj.getString("messageId") else ""
