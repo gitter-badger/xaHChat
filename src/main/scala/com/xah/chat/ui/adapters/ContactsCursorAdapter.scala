@@ -13,7 +13,6 @@ import android.text.TextUtils
 import android.view.View.OnClickListener
 import android.os.Bundle
 import com.xah.chat.ui.fragments.ChatFragment
-import android.util.Log
 
 class ContactsCursorAdapter(context: Activity) extends CursorAdapter(context, null, false) {
   val layoutInflater = context.getLayoutInflater
@@ -57,7 +56,6 @@ class ContactsCursorAdapter(context: Activity) extends CursorAdapter(context, nu
           extras.putString("chat_name", mcname)
           extras.putInt("contact_type", contactType)
           if (contactType == ContactType.Server) {
-            Log.d(TAG, s"'$password'")
             if (password != null && password.trim.replace("null", "") != "") {
               val pview = layoutInflater.inflate(R.layout.server_password, null)
               val passwordField = pview.findViewById(R.id.server_password).asInstanceOf[EditText]

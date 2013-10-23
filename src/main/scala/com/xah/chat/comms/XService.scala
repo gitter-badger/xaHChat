@@ -35,7 +35,6 @@ class XService extends Service {
   private var networkState = NETWORK_UNAVAILABLE
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
-  //val mTopic = "xahcraft/out"
   val serverListTopic = "serverlist/retained"
 
   private var mBinder: IBinder = _
@@ -47,16 +46,12 @@ class XService extends Service {
     def onReceive(context: Context, intent: Intent) {
       intent.getAction match {
         case ConnectivityManager.CONNECTIVITY_ACTION => {
-          Log.d(TAG, s"old network State ${networkState match {
-            case NETWORK_UNAVAILABLE => "unavailable"
-            case NETWORK_AVAILABLE => "available"
-          }}")
+          val oldState = networkState
           updateNetworkState()
-          Log.d(TAG, s"new network State ${networkState match {
-            case NETWORK_UNAVAILABLE => "unavailable"
-            case NETWORK_AVAILABLE => "available"
-          }}")
-          if (networkState == NETWORK_AVAILABLE) connect()
+          val newState = networkState
+          if (oldState != newState && networkState == NETWORK_AVAILABLE) {
+            connect()
+          }
         }
       }
     }
@@ -195,8 +190,8 @@ class XService extends Service {
   def connect() {
     if (networkState == NETWORK_AVAILABLE &&
       (connectionState == DISCONNECTED || connectionState == RECONNECTING)) {
+      connectionState = CONNECTING
       future {
-        connectionState = CONNECTING
         Log.i(TAG, "connecting")
         // mqtt client with specific url and client id
         if (client == null) {
@@ -210,14 +205,6 @@ class XService extends Service {
         client.setCallback(callback)
         client.subscribe(serverListTopic.toLowerCase, 2)
         client.subscribe(s"${xah.MCName(getApplicationContext)}/in".toLowerCase, 2)
-
-        //TODO: remove this section when servers list is implemented
-        val svalues = new ContentValues()
-        svalues.put(ContactFields.MCName.toString, "xaHCraft")
-        svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
-        getApplicationContext.getContentResolver.update(
-          Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = 'xaHCraft'", null
-        )
 
       } onComplete {
         case Success(t) => {

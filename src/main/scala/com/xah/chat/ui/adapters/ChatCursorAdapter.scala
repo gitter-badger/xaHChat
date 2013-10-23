@@ -75,8 +75,11 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
           .into(avatar)
       }
       case MessageType.FeedMessage => {
+        val millis = cursor.getLong(cursor.getColumnIndex(MessageFields.Time))
+        val date = new SimpleDateFormat("dd-MM HH:mm", Locale.US).format(new Date(millis))
+          .replace(new SimpleDateFormat("dd-MM ", Locale.US).format(new Date()), "")
         val feed = v.findViewById(android.R.id.text1).asInstanceOf[TextView]
-        feed.setText(cursor.getString(cursor.getColumnIndex(MessageFields.Message)))
+        feed.setText(s"${cursor.getString(cursor.getColumnIndex(MessageFields.Message))} at $date")
       }
     }
   }

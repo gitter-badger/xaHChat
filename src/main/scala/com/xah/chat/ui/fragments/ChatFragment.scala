@@ -50,11 +50,6 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
     val chatText = view.findViewById(R.id.chat_text).asInstanceOf[EditText]
     val send = view.findViewById(R.id.send_chat).asInstanceOf[Button]
 
-    getArguments.getInt("contact_type") match {
-      case ContactType.Server => mService.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
-      case ContactType.Player =>
-    }
-
     chatList.setOnScrollListener(new OnScrollListener {
       def onScrollStateChanged(p1: AbsListView, p2: Int) {
 
@@ -91,6 +86,16 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
 
     getLoaderManager.initLoader(0, null, this)
     view
+  }
+
+  override def onResume() {
+    super.onResume()
+    if (mService != null) {
+      getArguments.getInt("contact_type") match {
+        case ContactType.Server => mService.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
+        case ContactType.Player =>
+      }
+    }
   }
 
   def onLoaderReset(loader: Loader[Cursor]) {
