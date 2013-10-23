@@ -35,6 +35,7 @@ object MessageType {
   val FeedMessage = 2
   val ServerMessage = 3
   val SublistMessage = 4
+  val PlayerlistMessage = 5
 }
 
 class MessagesHelper extends TableHelper {

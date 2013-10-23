@@ -90,11 +90,10 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
 
   override def onResume() {
     super.onResume()
-    if (mService != null) {
-      getArguments.getInt("contact_type") match {
-        case ContactType.Server => mService.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
-        case ContactType.Player =>
-      }
+    (Option(mService), getArguments.getInt("contact_type")) match {
+      case (Some(service), ContactType.Server) => service.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
+      case (Some(service), ContactType.Player) =>
+      case _ =>
     }
   }
 

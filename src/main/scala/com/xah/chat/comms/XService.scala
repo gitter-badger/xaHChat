@@ -35,7 +35,7 @@ class XService extends Service {
   private var networkState = NETWORK_UNAVAILABLE
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
-  val serverListTopic = "serverlist/retained"
+  val serverListTopic = "+/list"
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
