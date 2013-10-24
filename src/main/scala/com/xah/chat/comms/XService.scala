@@ -61,26 +61,12 @@ class XService extends Service {
   private val callback = new MqttCallback() {
     //Handles Mqtt message
     override def messageArrived(topic: String, message: MqttMessage) {
-      Log.i(TAG, new String(message.getPayload()))
+      Log.i(TAG, s"$topic :: ${new String(message.getPayload())}")
       try {
         val payload = new Payload(message)
         payload.messageType match {
-          case MessageType.NormalMessage | MessageType.FeedMessage => {
+          case MessageType.NormalMessage | MessageType.FeedMessage | MessageType.PlayerlistMessage => {
             if (payload.isServer) {
-              //              val values = new ContentValues()
-              //              values.put(ContactFields.MCName.toString, payload.playerName)
-              //              values.put(ContactFields.ContactType.toString, ContactType.Player.toString)
-              //              getApplicationContext.getContentResolver.update(
-              //                Contacts.CONTENT_URI, values, s"${ContactFields.MCName} = '${payload.playerName}'", null
-              //              )
-              //
-              //              val svalues = new ContentValues()
-              //              svalues.put(ContactFields.MCName.toString, payload.serverName)
-              //              svalues.put(ContactFields.ContactType.toString, ContactType.Server.toString)
-              //              getApplicationContext.getContentResolver.update(
-              //                Contacts.CONTENT_URI, svalues, s"${ContactFields.MCName} = '${payload.serverName}'", null
-              //              )
-
               val msgValues = new ContentValues()
               msgValues.put(MessageFields.MCName.toString, payload.playerName)
               msgValues.put(MessageFields.Message.toString, payload.message)
@@ -114,6 +100,7 @@ class XService extends Service {
     }
 
     override def connectionLost(thrown: Throwable) {
+      Log.e(TAG, "ConnectionLost", thrown)
       connectionState = RECONNECTING
       Thread.sleep(2000)
       if (networkState == NETWORK_AVAILABLE) connect()
@@ -165,7 +152,10 @@ class XService extends Service {
     json.put("sender", xah.MCName(getApplicationContext))
     json.put("isServer", false)
     json.put("message", msg.replace("\"", "'"))
-    json.put("messageType", MessageType.NormalMessage)
+    json.put("messageType", msg.charAt(0) match {
+      case '.' => MessageType.CommandMessage
+      case _ => MessageType.NormalMessage
+    })
     json.put("messageId", JavaUtils.bytesToHex(crypt.digest()))
     json.put("timestamp", System.currentTimeMillis)
     val text: String = json.toString
@@ -175,7 +165,7 @@ class XService extends Service {
         enqueueMessage(message -> topic)
         if (networkState == NETWORK_AVAILABLE) connect()
       } else {
-        Log.d(TAG, s"publish on $topic :: ${message.getPayload.toString}")
+        Log.d(TAG, s"publish on $topic :: ${new String(message.getPayload)}")
         client.getTopic(topic).publish(message)
       }
     } catch {
