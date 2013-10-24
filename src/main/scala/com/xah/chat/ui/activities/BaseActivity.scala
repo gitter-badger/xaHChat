@@ -3,6 +3,7 @@ package com.xah.chat.ui.activities
 import android.app.Activity
 import com.xah.chat.comms.{XService, XServiceConnection}
 import android.content.{Context, Intent}
+import scala.language.implicitConversions
 import com.xah.chat.datamodel.xah
 
 class BaseActivity extends Activity {

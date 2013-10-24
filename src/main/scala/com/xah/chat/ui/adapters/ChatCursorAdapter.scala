@@ -4,6 +4,7 @@ import android.app.Activity
 import android.widget.{ImageView, TextView, CursorAdapter}
 import android.content.Context
 import android.database.Cursor
+import scala.language.implicitConversions
 import android.view.{View, ViewGroup}
 import com.xah.chat.datamodel.tables.{MessageType, MessageFields, ContactFields}
 import com.xah.chat.R

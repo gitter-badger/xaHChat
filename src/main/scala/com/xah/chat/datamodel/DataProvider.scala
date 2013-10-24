@@ -3,6 +3,7 @@ package com.xah.chat.datamodel
 import android.content.ContentProvider
 import android.net.Uri
 import android.database.Cursor
+import scala.language.implicitConversions
 import android.database.sqlite.SQLiteQueryBuilder
 import android.content.UriMatcher
 import android.content.{ContentValues, ContentUris}

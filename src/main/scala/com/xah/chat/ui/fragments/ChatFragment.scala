@@ -11,6 +11,7 @@ import com.xah.chat.ui.adapters.ChatCursorAdapter
 import android.widget.{AbsListView, Button, EditText, ListView}
 import android.view.View.OnClickListener
 import com.xah.chat.datamodel.xah
+import scala.language.implicitConversions
 import android.widget.AbsListView.OnScrollListener
 
 /**

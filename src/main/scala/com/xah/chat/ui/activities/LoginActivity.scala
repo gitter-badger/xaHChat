@@ -10,6 +10,7 @@ import android.view.View.OnClickListener
 import java.net.URL
 import java.util.Scanner
 import android.util.Log
+import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.xah
 import android.content.{Intent, Context}

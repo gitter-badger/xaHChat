@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.xah.chat.R
 import com.xah.chat.ui.fragments.ContactsFragment
 import com.xah.chat.datamodel.xah
+import scala.language.implicitConversions
 import android.content.{Intent, Context}
 import android.text.TextUtils
 import com.xah.chat.comms.XService

@@ -8,6 +8,7 @@ import android.widget.ListView
 import android.app.LoaderManager
 import android.database.Cursor
 import android.content.Loader
+import scala.language.implicitConversions
 import com.xah.chat.datamodel.tables.{ContactType, Contacts, ContactFields}
 import android.content.CursorLoader
 import com.xah.chat.ui.adapters.ContactsCursorAdapter

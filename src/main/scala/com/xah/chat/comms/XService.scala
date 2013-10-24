@@ -7,6 +7,7 @@ import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
 import scala.concurrent._
+import scala.language.implicitConversions
 import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
 import org.json.{JSONObject, JSONException}
@@ -219,6 +220,7 @@ class XService extends Service {
           Thread.sleep(1000)
           if (networkState == NETWORK_AVAILABLE) connect()
         }
+        case _ =>
       }
     }
   }

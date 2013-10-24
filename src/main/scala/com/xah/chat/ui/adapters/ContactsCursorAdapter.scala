@@ -5,6 +5,7 @@ import android.content.{DialogInterface, Context}
 import android.view.ViewGroup
 import android.view.View
 import android.widget._
+import scala.language.implicitConversions
 import android.app.{AlertDialog, Activity}
 import com.xah.chat.datamodel.tables.{ContactType, ContactFields}
 import com.xah.chat.R
