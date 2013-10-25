@@ -1,7 +1,6 @@
 package com.xah.chat.comms
 
 import org.json.JSONObject
-import org.eclipse.paho.client.mqttv3.MqttMessage
 import java.lang.String
 
 /**
@@ -10,8 +9,8 @@ import java.lang.String
  * Date: 2013/10/16
  * Time: 9:59 PM
  */
-class Payload(msg: MqttMessage) {
-  val obj = new JSONObject(new String(msg.getPayload()))
+class Payload(payload: Array[Byte]) {
+  val obj = new JSONObject(new String(payload))
   val sender = if (obj.has("sender")) obj.getString("sender") else ""
   val isServer = if (obj.has("isServer")) obj.getBoolean("isServer") else false
   val serverName = if (obj.has("serverName")) obj.getString("serverName") else ""

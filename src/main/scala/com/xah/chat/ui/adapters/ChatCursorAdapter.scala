@@ -38,10 +38,15 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
       case 0 => R.layout.chat_me
       case 1 => R.layout.chat_them
       case 2 => R.layout.chat_feed
+      case 3 => R.layout.chat_player_list
     }, parent, false)
   }
 
-  override def getViewTypeCount = 3
+  def getUrl(playername: String) = {
+    s"https://minotar.net/helm/$playername/116.png"
+  }
+
+  override def getViewTypeCount = 4
 
   override def getItemViewType(position: Int): Int = {
     getItemViewType(getItem(position).asInstanceOf[Cursor])
@@ -50,13 +55,11 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
   def getItemViewType(cursor: Cursor): Int = {
     val mcname = cursor.getString(cursor.getColumnIndex(MessageFields.MCName))
     val messageType = cursor.getInt(cursor.getColumnIndex(MessageFields.MessageType))
-    messageType match {
-      case MessageType.NormalMessage =>
-        mcname match {
-          case MCName => 0
-          case _ => 1
-        }
-      case MessageType.FeedMessage => 2
+    (messageType, mcname) match {
+      case (MessageType.NormalMessage, MCName) => 0
+      case (MessageType.NormalMessage, _) => 1
+      case (MessageType.FeedMessage, _) => 2
+      case (MessageType.PlayerlistMessage, _) => 3
     }
   }
 
@@ -72,7 +75,8 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
         chatSub.setText(s"${cursor.getString(cursor.getColumnIndex(MessageFields.MCName))} at $date")
         chatText.setText(cursor.getString(cursor.getColumnIndex(MessageFields.Message)))
         Picasso.`with`(context)
-          .load(s"https://minotar.net/helm/${cursor.getString(cursor.getColumnIndex(MessageFields.MCName))}/116.png")
+          .load(getUrl(cursor.getString(cursor.getColumnIndex(MessageFields.MCName))))
+          .placeholder(R.drawable.steve)
           .into(avatar)
       }
       case MessageType.FeedMessage => {
@@ -81,6 +85,22 @@ class ChatCursorAdapter(context: Activity) extends CursorAdapter(context, null, 
           .replace(new SimpleDateFormat("dd-MM ", Locale.US).format(new Date()), "")
         val feed = v.findViewById(android.R.id.text1).asInstanceOf[TextView]
         feed.setText(s"${cursor.getString(cursor.getColumnIndex(MessageFields.Message))} at $date")
+      }
+      case MessageType.PlayerlistMessage => {
+        v.asInstanceOf[ViewGroup].removeAllViews()
+        val t1 = new TextView(context)
+        t1.append(s"Players on ${cursor.getString(cursor.getColumnIndex(MessageFields.ServerName))}:")
+        v.asInstanceOf[ViewGroup].addView(t1);
+        cursor.getString(cursor.getColumnIndex(MessageFields.Message)).split(';').map(s => {
+          val view = layoutInflater.inflate(R.layout.chat_player_list_item, null)
+          view.findViewById(R.id.player_name).asInstanceOf[TextView].setText(s)
+          Picasso.`with`(context).load(getUrl(s)).placeholder(R.drawable.steve)
+            .into(view.findViewById(R.id.player_avatar).asInstanceOf[ImageView])
+          view
+        }).foreach(view => v.asInstanceOf[ViewGroup].addView(view))
+        val t2 = new TextView(context)
+        t2.append(s"${cursor.getString(cursor.getColumnIndex(MessageFields.Message)).split(';').length} players online.")
+        v.asInstanceOf[ViewGroup].addView(t2);
       }
     }
   }

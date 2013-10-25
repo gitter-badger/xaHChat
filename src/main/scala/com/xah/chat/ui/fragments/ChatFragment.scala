@@ -12,7 +12,6 @@ import android.widget.{AbsListView, Button, EditText, ListView}
 import android.view.View.OnClickListener
 import com.xah.chat.datamodel.xah
 import scala.language.implicitConversions
-import android.widget.AbsListView.OnScrollListener
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,8 +22,6 @@ import android.widget.AbsListView.OnScrollListener
 class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Cursor] {
   var mAdapter: ChatCursorAdapter = _
   var chatList: ListView = _
-  var firstOpen = true
-  var listBottom = true
 
   implicit def funToRunnable(f: () => Unit) = new Runnable {
     def run() {
@@ -51,40 +48,30 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
     val chatText = view.findViewById(R.id.chat_text).asInstanceOf[EditText]
     val send = view.findViewById(R.id.send_chat).asInstanceOf[Button]
 
-    chatList.setOnScrollListener(new OnScrollListener {
-      def onScrollStateChanged(p1: AbsListView, p2: Int) {
-
-      }
-
-      def onScroll(lv: AbsListView, firstVisible: Int, visibleCount: Int, totalItems: Int) {
-        lv.getId() match {
-          case R.id.chat_list => {
-            val lastItem = firstVisible + visibleCount;
-            listBottom = lastItem == totalItems
-          }
-        }
-      }
-    })
-
     send.setOnClickListener((v: View) => {
       val msg = chatText.getText.toString
       val json = mService.send(msg, s"${getArguments.getString("chat_name")}/in".toLowerCase)
       chatText.setText("")
-      val msgValues = new ContentValues()
-      msgValues.put(MessageFields.MCName.toString, xah.MCName(getActivity))
-      msgValues.put(MessageFields.Message.toString, msg)
-      if (getArguments.getInt("contact_type") == ContactType.Server) {
-        msgValues.put(MessageFields.ServerName.toString, getArguments.getString("chat_name"))
+      json.messageType match {
+        case MessageType.NormalMessage => {
+          val msgValues = new ContentValues()
+          msgValues.put(MessageFields.MCName.toString, xah.MCName(getActivity))
+          msgValues.put(MessageFields.Message.toString, msg)
+          if (getArguments.getInt("contact_type") == ContactType.Server) {
+            msgValues.put(MessageFields.ServerName.toString, getArguments.getString("chat_name"))
+          }
+          msgValues.put(MessageFields.MessageType.toString, MessageType.NormalMessage.toString)
+          msgValues.put(MessageFields.MessageId.toString, json.messageId)
+          msgValues.put(MessageFields.Time.toString, json.timestamp.toString)
+          getActivity.getContentResolver.update(
+            Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${json.messageId}'", null
+          )
+          chatList.post(() => {
+            chatList.smoothScrollToPosition(chatList.getCount - 1)
+          })
+        }
       }
-      msgValues.put(MessageFields.MessageType.toString, MessageType.NormalMessage.toString)
-      msgValues.put(MessageFields.MessageId.toString, json.messageId)
-      msgValues.put(MessageFields.Time.toString, json.timestamp.toString)
-      getActivity.getContentResolver.update(
-        Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${json.messageId}'", null
-      )
-      chatList.setSelection(chatList.getCount - 1)
     })
-
     getLoaderManager.initLoader(0, null, this)
     view
   }
@@ -103,34 +90,13 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
   }
 
   def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) {
-    // save index and top position
-
-    var index: Int = -1
-    var top: Int = -1
-    runOnUi(() => {
-      index = chatList.getFirstVisiblePosition
-      val v = chatList.getChildAt(0)
-      top = if (v == null) 0 else v.getTop
-    })
-
-    // ...
-    // restore
-
+    chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_DISABLED)
     if (mAdapter == null) {
       mAdapter = new ChatCursorAdapter(getActivity)
     }
     chatList.setAdapter(mAdapter)
     mAdapter.changeCursor(cursor)
-    runOnUi(() => {
-      if (firstOpen) {
-        chatList.setSelection(chatList.getCount - 1)
-        firstOpen = false
-      } else if (listBottom) {
-        chatList.setSelection(chatList.getCount - 1)
-      } else {
-        chatList.setSelectionFromTop(index, top);
-      }
-    })
+    chatList.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL)
   }
 
   def onCreateLoader(id: Int, data: Bundle): Loader[Cursor] = {
