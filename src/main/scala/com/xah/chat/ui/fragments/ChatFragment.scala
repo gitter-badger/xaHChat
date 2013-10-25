@@ -70,6 +70,7 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
             chatList.smoothScrollToPosition(chatList.getCount - 1)
           })
         }
+        case _ =>
       }
     })
     getLoaderManager.initLoader(0, null, this)
