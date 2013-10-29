@@ -66,7 +66,6 @@ class LoginActivity extends Activity {
           startActivity(new Intent(this, classOf[MainActivity]))
           this.finish()
         }
-
         Log.i(TAG, response)
         runOnUi(() => login.setEnabled(true))
       }
