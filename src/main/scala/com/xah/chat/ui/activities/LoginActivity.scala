@@ -59,13 +59,11 @@ class LoginActivity extends Activity {
         val scanner = new Scanner(connection.getInputStream).useDelimiter("\\A")
         val response = if (scanner.hasNext) scanner.next else ""
         if (response.length > 70) {
-          val mcname = response.split(":")(2)
-          val prefs = getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE)
-          prefs.edit()
-            .putString(xah.PREF_MCNAME, mcname)
+          getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putString(xah.PREF_MCNAME, response.split(":")(2))
             .commit()
-          val intent = new Intent(this, classOf[MainActivity])
-          startActivity(intent)
+          startActivity(new Intent(this, classOf[MainActivity]))
           this.finish()
         }
 
