@@ -2,6 +2,8 @@ android.Plugin.androidBuild
 
 resolvers += "Paho" at "https://repo.eclipse.org/content/repositories/paho-releases/"
 
+libraryDependencies += "com.android.support" % "appcompat-v7" % "18.0.0"
+
 libraryDependencies += "org.eclipse.paho" % "mqtt-client" % "0.4.0"
 
 libraryDependencies += "com.squareup.picasso" % "picasso" % "2.1.1"

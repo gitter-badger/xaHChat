@@ -5,14 +5,13 @@ import android.view.ViewGroup
 import android.os.Bundle
 import com.xah.chat.R
 import android.widget.ListView
-import android.app.LoaderManager
 import android.database.Cursor
-import android.content.Loader
 import scala.language.implicitConversions
 import com.xah.chat.datamodel.tables.{ContactType, Contacts, ContactFields}
-import android.content.CursorLoader
 import com.xah.chat.ui.adapters.ContactsCursorAdapter
 import android.util.Log
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.{Loader, CursorLoader}
 
 class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Cursor] {
   var contacts_list: ListView = _
@@ -29,7 +28,7 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
 
   override def onCreateLoader(id: Int, data: Bundle) = {
     Log.d(TAG, ContactFields.projection.toString)
-    new CursorLoader(getActivity(), Contacts.CONTENT_URI,
+    new CursorLoader(getActivity, Contacts.CONTENT_URI,
       ContactFields.projection, s"${ContactFields.ContactType} = ${ContactType.Server}", null, null)
   }
 

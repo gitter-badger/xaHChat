@@ -1,7 +1,7 @@
 package com.xah.chat.ui.fragments
 
-import android.app.Fragment
 import com.xah.chat.ui.activities.BaseActivity
+import android.support.v4.app.Fragment
 
 /**
  * Created with IntelliJ IDEA.

@@ -4,14 +4,15 @@ import android.view.{View, ViewGroup, LayoutInflater}
 import android.os.Bundle
 import com.xah.chat.R
 import com.xah.chat.datamodel.tables._
-import android.app.LoaderManager
 import android.database.Cursor
-import android.content.{ContentValues, CursorLoader, Loader}
+import android.content.ContentValues
 import com.xah.chat.ui.adapters.ChatCursorAdapter
 import android.widget.{AbsListView, Button, EditText, ListView}
 import android.view.View.OnClickListener
 import com.xah.chat.datamodel.xah
 import scala.language.implicitConversions
+import android.support.v4.app.LoaderManager
+import android.support.v4.content.{Loader, CursorLoader}
 
 /**
  * Created with IntelliJ IDEA.

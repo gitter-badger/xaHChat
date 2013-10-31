@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.view.View
 import android.widget._
 import scala.language.implicitConversions
-import android.app.{AlertDialog, Activity}
+import android.app.AlertDialog
 import com.xah.chat.datamodel.tables.{ContactType, ContactFields}
 import com.xah.chat.R
 import com.squareup.picasso.Picasso
@@ -14,8 +14,9 @@ import android.text.TextUtils
 import android.view.View.OnClickListener
 import android.os.Bundle
 import com.xah.chat.ui.fragments.ChatFragment
+import android.support.v4.app.FragmentActivity
 
-class ContactsCursorAdapter(context: Activity) extends CursorAdapter(context, null, false) {
+class ContactsCursorAdapter(context: FragmentActivity) extends CursorAdapter(context, null, false) {
   val layoutInflater = context.getLayoutInflater
   val TAG = "com.xah.ContactsCursorAdapter"
 
@@ -90,9 +91,9 @@ class ContactsCursorAdapter(context: Activity) extends CursorAdapter(context, nu
   def switchFragment(extras: Bundle) {
     val fragment = new ChatFragment
     fragment.setArguments(extras)
-    context.getFragmentManager.beginTransaction
-      .replace(R.id.content_frame, fragment)
-      .addToBackStack(null)
+    context.getSupportFragmentManager.beginTransaction
+      .replace(R.id.content_frame, fragment, "openchat")
+      .addToBackStack("chat opened")
       .commit
   }
 

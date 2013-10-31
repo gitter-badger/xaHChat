@@ -1,12 +1,12 @@
 package com.xah.chat.ui.activities
 
-import android.app.Activity
 import com.xah.chat.comms.{XService, XServiceConnection}
 import android.content.{Context, Intent}
 import scala.language.implicitConversions
 import com.xah.chat.datamodel.xah
+import android.support.v7.app.ActionBarActivity
 
-class BaseActivity extends Activity {
+class BaseActivity extends ActionBarActivity {
   val mConnection = new XServiceConnection
 
   protected def runOnUi(action: Runnable) = this.runOnUiThread(action)
