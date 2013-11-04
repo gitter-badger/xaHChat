@@ -28,7 +28,7 @@ class MainActivity extends BaseActivity {
     setContentView(R.layout.activity_main)
     if (getFragmentManager.findFragmentById(R.id.content_frame) == null) {
       getSupportFragmentManager.beginTransaction
-        .add(R.id.content_frame, new ContactsFragment)
+        .replace(R.id.content_frame, new ContactsFragment)
         .commit
     }
   }

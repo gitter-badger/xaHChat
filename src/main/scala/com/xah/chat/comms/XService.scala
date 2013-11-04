@@ -10,7 +10,6 @@ import scala.concurrent._
 import scala.language.implicitConversions
 import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
-import org.json.{JSONObject, JSONException}
 import java.security.MessageDigest
 import com.xah.chat.utils.JavaUtils
 import com.xah.chat.datamodel.xah
@@ -18,6 +17,7 @@ import scala.collection.mutable
 import android.net.ConnectivityManager
 import scala.util.Failure
 import scala.util.Success
+import org.json.JSONException
 
 class XService extends Service {
 
@@ -154,22 +154,37 @@ class XService extends Service {
     if (client.isConnected) client.disconnect()
   }
 
+  def JSON2String(json: JSON): String = json match {
+    case JSeq(elems) =>
+      "[" + (elems map JSON2String mkString ", ") + "]"
+    case JObj(bindings) =>
+      val assocs = bindings map {
+        case (key, value) => "\"" + key + "\": " + JSON2String(value)
+      }
+      "{" + (assocs mkString ", ") + "}"
+    case JNum(num) => num.toString
+    case JStr(str) => '\"' + str + '\"'
+    case JBool(b) => b.toString
+    case JNull => "null"
+  }
+
   def send(msg: String, topic: String): Payload = {
     val crypt: MessageDigest = MessageDigest.getInstance("SHA-1")
     crypt.reset()
     crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
-    val json: JSONObject = new JSONObject
-    json.put("sender", xah.MCName(getApplicationContext))
-    json.put("isServer", false)
-    json.put("message", msg.replace("\"", "'"))
-    json.put("messageType", msg.charAt(0) match {
-      case '.' => MessageType.CommandMessage
-      case _ => MessageType.NormalMessage
-    })
-    json.put("messageId", JavaUtils.bytesToHex(crypt.digest()))
-    json.put("timestamp", System.currentTimeMillis)
-    val text: String = json.toString
-    val message: MqttMessage = new MqttMessage(text.getBytes)
+    val data = JObj(Map(
+      "sender" -> JStr(xah.MCName(getApplicationContext)),
+      "isServer" -> JBool(false),
+      "message" -> JStr(msg.replace("\"", "'")),
+      "messageType" -> JNum(msg.charAt(0) match {
+        case '.' => MessageType.CommandMessage
+        case _ => MessageType.NormalMessage
+      }),
+      "messageId" -> JStr(JavaUtils.bytesToHex(crypt.digest())),
+      "timestamp" -> JNum(System.currentTimeMillis())
+    ))
+
+    val message = new MqttMessage(JSON2String(data).getBytes)
     try {
       if (connectionState != CONNECTED) {
         enqueueMessage(message -> topic)
