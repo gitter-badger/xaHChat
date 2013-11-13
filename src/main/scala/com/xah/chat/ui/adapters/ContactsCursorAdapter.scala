@@ -38,7 +38,6 @@ class ContactsCursorAdapter(context: FragmentActivity) extends CursorAdapter(con
     val avatar = v.findViewById(R.id.avatar).asInstanceOf[ImageView]
     val mcname = cursor.getString(cursor.getColumnIndex(ContactFields.MCName.toString))
     val status = cursor.getString(cursor.getColumnIndex(ContactFields.Status.toString))
-    val password = cursor.getString(cursor.getColumnIndex(ContactFields.ServerPassword.toString))
     t1.setText(mcname)
     if (!TextUtils.isEmpty(status)) t2.setText(status)
     val contactType = cursor.getInt(cursor.getColumnIndex(ContactFields.ContactType.toString))
@@ -53,48 +52,7 @@ class ContactsCursorAdapter(context: FragmentActivity) extends CursorAdapter(con
         Picasso.`with`(context)
           .load(R.drawable.server)
           .into(avatar)
-        v.setOnClickListener((view: View) => {
-          val extras = new Bundle()
-          extras.putString("chat_name", mcname)
-          extras.putInt("contact_type", contactType)
-          if (contactType == ContactType.Server) {
-            if (password != null && password.trim.replace("null", "") != "") {
-              val pview = layoutInflater.inflate(R.layout.server_password, null)
-              val passwordField = pview.findViewById(R.id.server_password).asInstanceOf[EditText]
-              val adb = new AlertDialog.Builder(context)
-              adb.setView(pview)
-                .setCancelable(true)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener {
-                def onClick(p1: DialogInterface, p2: Int) = {
-
-                }
-              }).setPositiveButton("OK", new DialogInterface.OnClickListener {
-                def onClick(p1: DialogInterface, p2: Int) = {
-                  if (password == passwordField.getText.toString) {
-                    switchFragment(extras)
-                  } else {
-                    Toast.makeText(context, "Server password incorrect.", Toast.LENGTH_SHORT)
-                  }
-                }
-              }).create().show()
-            } else {
-              switchFragment(extras)
-            }
-          } else {
-            switchFragment(extras)
-          }
-        })
       }
     }
   }
-
-  def switchFragment(extras: Bundle) {
-    val fragment = new ChatFragment
-    fragment.setArguments(extras)
-    context.getSupportFragmentManager.beginTransaction
-      .replace(R.id.content_frame, fragment, "openchat")
-      .addToBackStack("chat opened")
-      .commit
-  }
-
 }

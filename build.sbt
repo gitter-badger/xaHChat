@@ -2,7 +2,7 @@ android.Plugin.androidBuild
 
 resolvers += "Paho" at "https://repo.eclipse.org/content/repositories/paho-releases/"
 
-libraryDependencies += "com.android.support" % "appcompat-v7" % "18.0.0"
+libraryDependencies += "com.android.support" % "appcompat-v7" % "19.0.0"
 
 libraryDependencies += "org.eclipse.paho" % "mqtt-client" % "0.4.0"
 
@@ -10,7 +10,7 @@ libraryDependencies += "com.squareup.picasso" % "picasso" % "2.1.1"
 
 libraryDependencies += "com.squareup.okhttp" % "okhttp" % "1.2.1"
 
-libraryDependencies += "com.android.support" % "support-v4" % "18.0.0"
+libraryDependencies += "com.android.support" % "support-v4" % "19.0.0"
 
 name := "xaHChat"
  

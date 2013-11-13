@@ -165,7 +165,7 @@ class XService extends Service {
     case JNum(num) => num.toString
     case JStr(str) => '\"' + str + '\"'
     case JBool(b) => b.toString
-    case JNull => "null"
+    case JNull() => "null"
   }
 
   def send(msg: String, topic: String): Payload = {

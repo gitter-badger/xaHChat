@@ -13,5 +13,5 @@ case class JNum(n: Long) extends JSON
 case class JObj(m: Map[String, JSON]) extends JSON
 case class JBool(b: Boolean) extends JSON
 case class JSeq(l: List[JSON]) extends JSON
-case class JNull extends JSON
+case class JNull() extends JSON
 

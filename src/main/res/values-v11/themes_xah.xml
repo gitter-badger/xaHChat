@@ -7,7 +7,6 @@
 
         <item name="android:editTextBackground">@drawable/edit_text_holo_light</item>
         <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewxaH</item>
-        <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_holo_light</item>
         <item name="android:listChoiceIndicatorSingle">@drawable/btn_radio_holo_light</item>
         <item name="android:buttonStyle">@style/ButtonxaH</item>
         <item name="android:imageButtonStyle">@style/ImageButtonxaH</item>

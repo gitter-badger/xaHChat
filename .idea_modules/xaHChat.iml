@@ -5,22 +5,20 @@
       <configuration>
         <option name="compilerLibraryLevel" value="Project" />
         <option name="compilerLibraryName" value="SBT: scala:2.10.3" />
-        <option name="compilerOptions" value="-bootclasspath /home/lemonxah/dev/android-sdk/platforms/android-18/android.jar -javabootclasspath /home/lemonxah/dev/android-sdk/platforms/android-18/android.jar -feature" />
+        <option name="compilerOptions" value="-bootclasspath d:\dev\android-sdk\platforms\android-18\android.jar -javabootclasspath d:\dev\android-sdk\platforms\android-18\android.jar -feature" />
         <option name="fsc" value="true" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
       <configuration>
-        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../target/android-gen" />
-        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../target/android-gen" />
-        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../src/main/AndroidManifest.xml" />
-        <option name="RES_FOLDER_RELATIVE_PATH" value="/../src/main/res" />
-        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/../src/main/assets" />
-        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/../src/main/libs" />
-        <option name="APK_PATH" value="/../target/android-bin/.build_integration/xaHChat-BUILD-INTEGRATION.apk" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_APT" value="/../target\android-gen" />
+        <option name="GEN_FOLDER_RELATIVE_PATH_AIDL" value="/../target\android-gen" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/../src\main\AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/../src\main\res" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/../src\main\assets" />
+        <option name="LIBS_FOLDER_RELATIVE_PATH" value="/../src\main\libs" />
+        <option name="APK_PATH" value="/../target\android-bin\.build_integration\xaHChat-BUILD-INTEGRATION.apk" />
         <option name="RUN_PROCESS_RESOURCES_MAVEN_TASK" value="false" />
-        <option name="PROGUARD_CFG_PATH" value="/proguard-project.cfg" />
-        <includeSystemProguardFile>false</includeSystemProguardFile>
         <resOverlayFolders>
           <path />
         </resOverlayFolders>
@@ -40,7 +38,7 @@
       <sourceFolder url="file://$MODULE_DIR$/../src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../src/test/scala" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../src/test/resources" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../target/android-gen" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../target/android-gen" isTestSource="false" generated="true" />
       <excludeFolder url="file://$MODULE_DIR$/../target/aars" />
       <excludeFolder url="file://$MODULE_DIR$/../target/android-bin" />
       <excludeFolder url="file://$MODULE_DIR$/../target/resolution-cache" />
@@ -50,7 +48,7 @@
     <orderEntry type="jdk" jdkName="Android 4.3 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="SBT: org.scala-lang:scala-library:2.10.3" level="project" />
-    <orderEntry type="library" name="SBT: com.android.support:support-v4:18.0.0" level="project" />
+    <orderEntry type="library" name="SBT: com.android.support:support-v4:19.0.0" level="project" />
     <orderEntry type="library" name="SBT: org.eclipse.paho:mqtt-client:0.4.0" level="project" />
     <orderEntry type="library" name="SBT: com.squareup.picasso:picasso:2.1.1" level="project" />
     <orderEntry type="library" name="SBT: com.squareup.okhttp:okhttp:1.2.1" level="project" />
