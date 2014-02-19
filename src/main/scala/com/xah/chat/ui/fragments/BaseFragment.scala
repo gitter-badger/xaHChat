@@ -10,5 +10,5 @@ import android.support.v4.app.Fragment
  * Time: 8:48 PM
  */
 class BaseFragment extends Fragment {
-  def mService = getActivity.asInstanceOf[BaseActivity].mConnection.getService
+  def mService = getActivity.asInstanceOf[BaseActivity].mConnection.getService()
 }
