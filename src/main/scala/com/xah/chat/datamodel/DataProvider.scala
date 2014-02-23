@@ -3,41 +3,43 @@ package com.xah.chat.datamodel
 import android.content.ContentProvider
 import android.net.Uri
 import android.database.Cursor
+import scala.language.implicitConversions
 import android.database.sqlite.SQLiteQueryBuilder
 import android.content.UriMatcher
-import com.xah.chat.datamodel.tables.{ContactsHelper, MessagesHelper}
 import android.content.{ContentValues, ContentUris}
 import android.database.SQLException
 import com.xah.chat.datamodel.tables.Contacts
 import com.xah.chat.datamodel.tables.Messages
 
 class DataProvider extends ContentProvider {
-  val matcher = new UriMatcher(UriMatcher.NO_MATCH);
+  val matcher = new UriMatcher(UriMatcher.NO_MATCH)
+  val TAG = "com.xah.DataProvider"
+
   val CONTACTS = 100
   val CONTACT = 101
   val MESSAGES = 200
   val MESSAGE = 201
+  val MESSAGES_JOIN_CONTACTS = 202
 
   matcher.addURI(xah.AUTHORITY, "contacts", CONTACTS)
   matcher.addURI(xah.AUTHORITY, "contact/*", CONTACT)
-  matcher.addURI(xah.AUTHORITY, "messages/*", MESSAGES)
+  matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
+  matcher.addURI(xah.AUTHORITY, "messages/contacts", MESSAGES_JOIN_CONTACTS)
 
-  private var mContactsHelper: ContactsHelper = _
-  private var mMessagesHelper: MessagesHelper = _
+  private var dbHelper: DBHelper = _
 
   override def onCreate() = {
-    mContactsHelper = new ContactsHelper(getContext)
-    mMessagesHelper = new MessagesHelper(getContext)
+    dbHelper = new DBHelper(getContext)
     true
   }
 
   override def query(uri: Uri, projection: Array[String], selection: String, selectionArgs: Array[String], sortOrder: String): Cursor = {
     val queryBuilder = new SQLiteQueryBuilder()
-    val pathSegments = uri.getPathSegments()
+    val pathSegments = uri.getPathSegments
     val qb = new SQLiteQueryBuilder
     qb setTables getTablename(uri)
-    val c = qb.query(getDb(uri), projection, selection, selectionArgs, null, null, sortOrder)
+    val c = qb.query(getDb, projection, selection, selectionArgs, null, null, sortOrder)
     c.setNotificationUri(getContext.getContentResolver, uri)
     c
   }
@@ -45,14 +47,12 @@ class DataProvider extends ContentProvider {
   def getTablename(uri: Uri) = matcher `match` uri match {
     case CONTACTS | CONTACT => Contacts.TABLE_NAME
     case MESSAGES | MESSAGE => Messages.TABLE_NAME
+    case MESSAGES_JOIN_CONTACTS =>
+      s"${Messages.TABLE_NAME} JOIN ${Contacts.TABLE_NAME} on ${Contacts.TABLE_NAME}.MCName = ${Messages.TABLE_NAME}.MCName "
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
 
-  def getDb(uri: Uri) = matcher `match` uri match {
-    case CONTACTS | CONTACT => mContactsHelper.getWritableDatabase()
-    case MESSAGES | MESSAGE => mMessagesHelper.getWritableDatabase()
-    case _ => throw new IllegalArgumentException("Unknown URI " + uri)
-  }
+  def getDb = dbHelper.getWritableDatabase
 
   def getContentUri(uri: Uri) = matcher `match` uri match {
     case CONTACTS => Contacts.CONTENT_URI
@@ -71,19 +71,18 @@ class DataProvider extends ContentProvider {
       else new ContentValues()
 
     val now = System.currentTimeMillis.toDouble
-
-    val rowId = getDb(uri).insert(getTablename(uri), null, values)
+    val rowId = getDb.insert(getTablename(uri), null, values)
     if (rowId > 0) {
       val retUri = ContentUris.withAppendedId(getContentUri(uri), rowId)
-      getContext.getContentResolver.notifyChange(retUri, null)
+      getContext.getContentResolver.notifyChange(uri, null)
+      getContext.getContentResolver.notifyChange(Messages.MESSAGES_JOIN_CONTACTS_URI, null)
       retUri
     } else
       throw new SQLException("Failed to insert row into " + uri)
   }
 
   override def delete(uri: Uri, where: String, whereArgs: Array[String]): Int = {
-    val db = getDb(uri)
-    val count = getDb(uri).delete(Contacts.TABLE_NAME, where, whereArgs)
+    val count = getDb.delete(Contacts.TABLE_NAME, where, whereArgs)
     getContext.getContentResolver.notifyChange(uri, null)
     count
   }
@@ -100,7 +99,10 @@ class DataProvider extends ContentProvider {
 
   override def update(uri: Uri, values: ContentValues,
                       where: String, whereArgs: Array[String]): Int = {
-    val count = getDb(uri).update(getTablename(uri), values, where, whereArgs)
+    val count = getDb.update(getTablename(uri), values, where, whereArgs)
+    if (count == 0) {
+      insert(uri, values)
+    }
     getContext.getContentResolver.notifyChange(uri, null)
     count
   }

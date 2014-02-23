@@ -1,4 +1,4 @@
 xaHChat
 =======
 
-xaHChat, minecraft social chat app written in scala
+xaHChat, chat app framework written in scala using mqtt server

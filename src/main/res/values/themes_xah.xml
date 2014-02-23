@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="xaH" parent="Theme.Xahab">
+
+        <item name="android:editTextStyle">@style/EditTextxaH</item>
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewxaH</item>
+        <item name="android:radioButtonStyle">@style/RadioButtonxaH</item>
+        <item name="android:buttonStyle">@style/ButtonxaH</item>
+        <item name="android:imageButtonStyle">@style/ImageButtonxaH</item>
+        <item name="android:spinnerStyle">@style/SpinnerxaH</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemxaH</item>
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarxaH</item>
+        <item name="android:seekBarStyle">@style/SeekBarxaH</item>
+        <item name="android:buttonStyleToggle">@style/TogglexaH</item>
+        <item name="android:listViewStyle">@style/ListViewxaH</item>
+        <item name="android:listViewWhiteStyle">@style/ListViewxaH.White</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemxaH</item>
+
+    </style>
+
+</resources>

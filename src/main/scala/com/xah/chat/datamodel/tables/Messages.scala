@@ -1,17 +1,16 @@
 package com.xah.chat.datamodel.tables
 
-import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteDatabase
-import android.content.Context
 import java.sql.Timestamp
 import android.provider.BaseColumns
 import android.net.Uri
-import com.xah.chat.datamodel.xah
+import com.xah.chat.datamodel.{TableHelper, xah}
 import android.util.Log
+import scala.language.implicitConversions
 
 object MessageFields extends Enumeration {
   type Field = Value
-  val _ID, MCName, Message, MessageId, Time, isSent = Value
+  val _ID, MCName, Message, MessageId, Time, MessageType, ServerName, isSent = Value
   val projection =
     (for (v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString).toArray
 }
@@ -22,27 +21,39 @@ class Message(val Contact: String, val Message: String,
 object Messages {
   val _ID = BaseColumns._ID
   val _COUNT = BaseColumns._COUNT
-  val TABLE_NAME = "Contacts"
-  final val CONTENT_URI = Uri.parse("content://" + xah.AUTHORITY + "/messages")
+  val TABLE_NAME = "Messages"
+  final val CONTENT_URI = Uri.parse(s"content://${xah.AUTHORITY}/messages")
+  final val MESSAGES_JOIN_CONTACTS_URI = CONTENT_URI.buildUpon().appendPath("contacts").build()
   final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.message"
   final val CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.xah.message"
   final val DEFAULT_SORT_ORDER = "Time DESC"
 }
 
-class MessagesHelper(context: Context) extends SQLiteOpenHelper(context, "xah.db", null, 3) {
-  val TAG = "MessagesHelper"
+object MessageType {
+  val NormalMessage = 0
+  val CommandMessage = 1
+  val FeedMessage = 2
+  val ServerMessage = 3
+  val SublistMessage = 4
+  val PlayerlistMessage = 5
+}
+
+class MessagesHelper extends TableHelper {
+  val TAG = "com.xah.MessagesHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
     val create = s"""
 			create table ${Messages.TABLE_NAME} (
 				${BaseColumns._ID} integer primary key autoincrement,
-				foreign key(${ContactFields.MCName}) references Contacts(${MessageFields.MCName}) not null,
+				${MessageFields.MCName} Text,
 				${MessageFields.Message} Text,
-				${MessageFields.MessageId} long,
-				${MessageFields.Time} TIMESTAMP,
+				${MessageFields.MessageType} long,
+				${MessageFields.ServerName} Text,
+				${MessageFields.MessageId} Text,
+				${MessageFields.Time} long,
 				${MessageFields.isSent} Boolean
 			)"""
-    Log.d(TAG, "create")
+    Log.d(TAG, create)
     db.execSQL(create)
   }
 
