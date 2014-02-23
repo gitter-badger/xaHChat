@@ -27,3 +27,6 @@ gen/
 
 #sbt-android
 target
+#idea
+.idea
+.idea_module
