@@ -11,4 +11,4 @@ before_install:
 
 before_script:
 
-script:
+script:gradle assembleDebug
