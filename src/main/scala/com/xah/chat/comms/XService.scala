@@ -64,35 +64,12 @@ class XService extends Service {
     override def messageArrived(topic: String, message: MqttMessage) {
       Log.i(TAG, s"$topic :: ${new String(message.getPayload())}")
       try {
-        val listPattern = ".+/list".r
+        val listPattern = "xahchat/.+/list".r
         (Option(message.getPayload), topic) match {
           case (Some(pl: Array[Byte]), _) => {
             val payload = new Payload(pl)
             payload.messageType match {
-              case MessageType.NormalMessage | MessageType.FeedMessage | MessageType.PlayerlistMessage => {
-                if (payload.isServer) {
-                  val msgValues = new ContentValues()
-                  msgValues.put(MessageFields.MCName.toString, payload.playerName)
-                  msgValues.put(MessageFields.Message.toString, payload.message)
-                  msgValues.put(MessageFields.ServerName.toString, payload.serverName)
-                  msgValues.put(MessageFields.MessageType.toString, payload.messageType.toString)
-                  msgValues.put(MessageFields.MessageId.toString, payload.messageId.toString)
-                  msgValues.put(MessageFields.Time.toString, payload.timestamp.toString)
-                  getApplicationContext.getContentResolver.update(
-                    Messages.CONTENT_URI, msgValues, s"${MessageFields.MessageId} = '${payload.messageId}'", null
-                  )
-                }
-              }
-              case MessageType.SublistMessage => {
-                val sv = new ContentValues()
-                sv.put(ContactFields.ContactName.toString, payload.serverName)
-                sv.put(ContactFields.ContactType.toString, ContactType.Channel.toString)
-                sv.put(ContactFields.Status.toString, payload.serverIp)
-                sv.put(ContactFields.ChannelPassword.toString, payload.serverPassword)
-                getApplicationContext.getContentResolver.update(
-                  Contacts.CONTENT_URI, sv, s"${ContactFields.ContactName} = '${payload.serverName}'", null
-                )
-              }
+              case MessageType.NormalMessage | MessageType.FeedMessage => { }
               case _ => Log.e(TAG, s"Unhandled MessageType: ${payload.messageType}")
             }
           }
