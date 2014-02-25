@@ -7,7 +7,7 @@ import android.provider.BaseColumns
 import android.util.Log
 
 
-object Contacts {
+object Channels {
   val _ID = BaseColumns._ID
   val _COUNT = BaseColumns._COUNT
   val TABLE_NAME = "Contacts"
@@ -17,31 +17,31 @@ object Contacts {
   final val DEFAULT_SORT_ORDER = "name DESC"
 }
 
-object ContactType {
+object ChannelType {
   val Channel = 0
   val Player = 1
 }
 
-object ContactFields extends Enumeration {
+object ChannelsFields extends Enumeration {
   type Field = Value
-  val _ID, ContactName, Status, SubType, ContactType = Value
+  val _ID, ChannelName, Status, ChannelPassword, ChannelType = Value
   val projection =
-    (for (v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
+    (for (v <- values) yield if (v == ChannelsFields._ID) BaseColumns._ID else v.toString).toArray
 }
 
-class Contact(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
+class Channel(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
 
-class ContactsHelper extends TableHelper {
+class ChannelsHelper extends TableHelper {
   val TAG = "com.xah.ContactsHelper"
 
   def onCreate(db: SQLiteDatabase): Unit = {
     val create = s"""
       create table ${Contacts.TABLE_NAME} (
         ${BaseColumns._ID} integer primary key autoincrement,
-        ${ContactFields.ContactName} Text,
-        ${ContactFields.Status} Text,
-        ${ContactFields.SubType} Text,
-        ${ContactFields.ContactType} long
+        ${ChannelsFields.ChannelName} Text,
+        ${ChannelsFields.Status} Text,
+        ${ChannelsFields.ChannelPassword} Text,
+        ${ChannelsFields.ChannelType} long
       )"""
     Log.d(TAG, create)
     db.execSQL(create)

@@ -36,7 +36,7 @@ class ContactsCursorAdapter(context: FragmentActivity) extends CursorAdapter(con
     val t1 = v.findViewById(R.id.mcname).asInstanceOf[TextView]
     val t2 = v.findViewById(R.id.status).asInstanceOf[TextView]
     val avatar = v.findViewById(R.id.avatar).asInstanceOf[ImageView]
-    val mcname = cursor.getString(cursor.getColumnIndex(ContactFields.MCName.toString))
+    val mcname = cursor.getString(cursor.getColumnIndex(ContactFields.ContactName.toString))
     val status = cursor.getString(cursor.getColumnIndex(ContactFields.Status.toString))
     t1.setText(mcname)
     if (!TextUtils.isEmpty(status)) t2.setText(status)
@@ -48,7 +48,7 @@ class ContactsCursorAdapter(context: FragmentActivity) extends CursorAdapter(con
           .into(avatar)
         v.setOnClickListener(null)
       }
-      case ContactType.Server => {
+      case ContactType.Channel => {
         Picasso.`with`(context)
           .load(R.drawable.server)
           .into(avatar)

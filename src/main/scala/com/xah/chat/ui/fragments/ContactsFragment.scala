@@ -38,7 +38,7 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
   override def onCreateLoader(id: Int, data: Bundle) = {
     Log.d(TAG, ContactFields.projection.toString)
     new CursorLoader(getActivity, Contacts.CONTENT_URI,
-      ContactFields.projection, s"${ContactFields.ContactType} = ${ContactType.Server}", null, null)
+      ContactFields.projection, s"${ContactFields.ContactType} = ${ContactType.Channel}", null, null)
   }
 
   override def onLoadFinished(loader: Loader[Cursor], cursor: Cursor) = {
@@ -49,13 +49,13 @@ class ContactsFragment extends BaseFragment with LoaderManager.LoaderCallbacks[C
     contacts_list.setOnItemClickListener((parent: AdapterView[_], view: View, position: Int, id: Long) => {
       val c = contacts_list.getItemAtPosition(position).asInstanceOf[Cursor]
       val extras = new Bundle()
-      val mcname = c.getString(cursor.getColumnIndex(ContactFields.MCName.toString))
+      val mcname = c.getString(cursor.getColumnIndex(ContactFields.ContactName.toString))
       val contactType = c.getInt(cursor.getColumnIndex(ContactFields.ContactType.toString))
-      val password = cursor.getString(cursor.getColumnIndex(ContactFields.ServerPassword.toString))
+      val password = cursor.getString(cursor.getColumnIndex(ContactFields.ChannelPassword.toString))
 
       extras.putString("chat_name", mcname)
       extras.putInt("contact_type", contactType)
-      if (contactType == ContactType.Server) {
+      if (contactType == ContactType.Channel) {
         if (password != null && password.trim.replace("null", "") != "") {
           val pview = getLayoutInflater(null).inflate(R.layout.server_password, null)
           val passwordField = pview.findViewById(R.id.server_password).asInstanceOf[EditText]

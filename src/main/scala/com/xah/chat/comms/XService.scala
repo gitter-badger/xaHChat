@@ -85,12 +85,12 @@ class XService extends Service {
               }
               case MessageType.SublistMessage => {
                 val sv = new ContentValues()
-                sv.put(ContactFields.MCName.toString, payload.serverName)
-                sv.put(ContactFields.ContactType.toString, ContactType.Server.toString)
+                sv.put(ContactFields.ContactName.toString, payload.serverName)
+                sv.put(ContactFields.ContactType.toString, ContactType.Channel.toString)
                 sv.put(ContactFields.Status.toString, payload.serverIp)
-                sv.put(ContactFields.ServerPassword.toString, payload.serverPassword)
+                sv.put(ContactFields.ChannelPassword.toString, payload.serverPassword)
                 getApplicationContext.getContentResolver.update(
-                  Contacts.CONTENT_URI, sv, s"${ContactFields.MCName} = '${payload.serverName}'", null
+                  Contacts.CONTENT_URI, sv, s"${ContactFields.ContactName} = '${payload.serverName}'", null
                 )
               }
               case _ => Log.e(TAG, s"Unhandled MessageType: ${payload.messageType}")

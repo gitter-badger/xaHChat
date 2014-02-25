@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.xah.chat"
-          android:versionCode="15"
-          android:versionName="0.0.7.2">
+          package="com.xah.chat.community"
+          android:versionCode="1"
+          android:versionName="0.0.1.1">
 
     <uses-sdk
             android:minSdkVersion="7"
@@ -18,7 +18,7 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.Xahab">
         <activity
-                android:name=".ui.activities.MainActivity"
+                android:name="com.xah.chat.ui.activities.MainActivity"
                 android:label="@string/app_name"
                 android:launchMode="singleTop">
             <intent-filter>
@@ -28,13 +28,13 @@
         </activity>
 
         <activity
-                android:name=".ui.activities.LoginActivity"
+                android:name="com.xah.chat.ui.activities.LoginActivity"
                 android:label="@string/app_name"/>
 
-        <service android:name=".comms.XService"/>
+        <service android:name="com.xah.chat.comms.XService"/>
 
         <provider
-                android:name=".datamodel.DataProvider"
+                android:name="com.xah.chat.datamodel.DataProvider"
                 android:authorities="com.xah.chat.data"
                 android:exported="false">
         </provider>

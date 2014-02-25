@@ -58,7 +58,7 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
           val msgValues = new ContentValues()
           msgValues.put(MessageFields.MCName.toString, xah.MCName(getActivity))
           msgValues.put(MessageFields.Message.toString, msg)
-          if (getArguments.getInt("contact_type") == ContactType.Server) {
+          if (getArguments.getInt("contact_type") == ContactType.Channel) {
             msgValues.put(MessageFields.ServerName.toString, getArguments.getString("chat_name"))
           }
           msgValues.put(MessageFields.MessageType.toString, MessageType.NormalMessage.toString)
@@ -81,7 +81,7 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
   override def onResume() {
     super.onResume()
     (Option(mService), getArguments.getInt("contact_type")) match {
-      case (Some(service), ContactType.Server) => service.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
+      case (Some(service), ContactType.Channel) => service.subscribe(s"${getArguments.getString("chat_name").toLowerCase}/out")
       case (Some(service), ContactType.Player) =>
       case _ =>
     }
@@ -106,7 +106,7 @@ class ChatFragment extends BaseFragment with LoaderManager.LoaderCallbacks[Curso
       MessageFields.projection,
       s"""${getArguments.getInt("contact_type") match {
         case ContactType.Player => MessageFields.MCName
-        case ContactType.Server => MessageFields.ServerName
+        case ContactType.Channel => MessageFields.ServerName
       }} = ?""", Array(getArguments.getString("chat_name")), null)
 
   }
