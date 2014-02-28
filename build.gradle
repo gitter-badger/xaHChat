@@ -31,6 +31,10 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.10.3'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.10'
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion '19.0.2'

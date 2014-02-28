@@ -35,8 +35,6 @@ class DataProvider extends ContentProvider {
   }
 
   override def query(uri: Uri, projection: Array[String], selection: String, selectionArgs: Array[String], sortOrder: String): Cursor = {
-    val queryBuilder = new SQLiteQueryBuilder()
-    val pathSegments = uri.getPathSegments
     val qb = new SQLiteQueryBuilder
     qb setTables getTablename(uri)
     val c = qb.query(getDb, projection, selection, selectionArgs, null, null, sortOrder)
