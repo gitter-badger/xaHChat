@@ -71,6 +71,6 @@ android {
     }
 
     scala {
-        target "jvm-1.6" // default: "jvm-1.6"
+        target "jvm-1.7" // default: "jvm-1.6"
     }
 }

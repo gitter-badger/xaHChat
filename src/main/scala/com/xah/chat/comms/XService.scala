@@ -18,6 +18,7 @@ import android.net.ConnectivityManager
 import scala.util.Failure
 import scala.util.Success
 import org.json.JSONException
+import java.util.UUID
 
 class XService extends Service {
 
