@@ -15,8 +15,7 @@
     <application
             android:allowBackup="true"
             android:icon="@drawable/ic_launcher"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Xahab">
+            android:label="@string/app_name">
         <activity
                 android:name="com.xah.chat.ui.activities.MainActivity"
                 android:label="@string/app_name"

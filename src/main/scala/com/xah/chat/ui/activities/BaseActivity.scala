@@ -4,10 +4,10 @@ import com.xah.chat.comms.{XService, XServiceConnection}
 import android.content.{Context, Intent}
 import scala.language.implicitConversions
 import com.xah.chat.datamodel.xah
-import android.support.v7.app.ActionBarActivity
 import com.xah.chat.utils.JavaUtils
+import android.support.v4.app.FragmentActivity
 
-class BaseActivity extends ActionBarActivity {
+class BaseActivity extends FragmentActivity {
   val mConnection = new XServiceConnection
   val mDeviceId = JavaUtils.getDeviceId(this)
 
