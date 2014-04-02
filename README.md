@@ -9,7 +9,7 @@ using Travis-ci.org to build my project
 
 ### To run in Intellij Idea
 * Install [Scala](http://www.jetbrains.net/confluence/display/SCA/Scala+Plugin+for+IntelliJ+IDEA) plugin
-* Install [SBT](http://github.com/orfjackal/idea-sbt-plugi) plugin
+* Install [SBT](http://github.com/orfjackal/idea-sbt-plugin) plugin
 
 * From command line run `sbt gen-idea`
 * Edit Run Config of Intellij Idea:
