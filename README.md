@@ -20,5 +20,9 @@ create `local.properties` file in the root of the project with following content
 
     sdk.dir=\<Your ANDROID_HOME\>
 
+or better approach to setup ANDROID_HOME in your environment, for example on Mac:
+
+    launchctl setenv ANDROID_HOME \<Your ANDROID_HOME\>
+
 
 
