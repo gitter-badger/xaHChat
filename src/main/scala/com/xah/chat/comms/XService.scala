@@ -23,7 +23,7 @@ import java.util.UUID
 class XService extends Service {
 
   private val TAG = "com.xah.chat/XService"
-  private val brokerUrl = "tcp://chat.xah.co.za:1883"
+  private val brokerUrl = "tcp://xahsrv.co.za:1883"
   private val DISCONNECTED = 0
   private val CONNECTING = 1
   private val CONNECTED = 2
