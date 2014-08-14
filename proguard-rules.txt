@@ -2,7 +2,5 @@
 -dontobfuscate
 -dontpreverify
 -dontwarn scala.**
--keep class !scala.collection.** { *; }
--keep class scala.collection.SeqLike {
-    public protected *;
-}
+-keep class !scala*.** { *; }
+-ignorewarnings

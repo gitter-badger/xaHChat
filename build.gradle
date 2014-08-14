@@ -1,0 +1,68 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url "http://saturday06.github.io/gradle-android-scala-plugin/repository/snapshot"
+        }
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:0.12.2"
+        classpath "jp.leafytree.gradle:gradle-android-scala-plugin:1.0-SNAPSHOT"
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-releases/"
+    }
+}
+
+apply plugin: "com.android.application"
+apply plugin: "android-scala"
+
+android {
+    compileSdkVersion "android-20"
+    buildToolsVersion "20.0.0"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 20
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            scala {
+                srcDir "src/main/scala" // default: "src/main/scala"
+            }
+        }
+
+        androidTest {
+            scala {
+                srcDir "src/androidTest/scala" // default: "src/androidTest/scala"
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            runProguard true // required
+            proguardFile file("proguard-rules.txt")
+        }
+
+        release {
+            runProguard true
+            proguardFile file("proguard-rules.txt")
+        }
+    }
+}
+
+dependencies {
+    compile "org.scala-lang:scala-library:2.11.2"
+    compile "org.eclipse.paho:mqtt-client:0.4.0"
+    compile "com.squareup.picasso:picasso:2.1.1"
+    compile "com.squareup.okhttp:okhttp:1.2.1"
+    compile "com.android.support:support-v4:20.+"
+}
