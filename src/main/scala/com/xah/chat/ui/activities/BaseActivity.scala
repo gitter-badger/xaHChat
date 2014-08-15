@@ -19,7 +19,7 @@ class BaseActivity extends FragmentActivity {
 
   override def onStart() = {
     super.onStart()
-    if (xah.MCName(this) != "") {
+    if (xah.Handle(this) != "") {
       bindService(new Intent(this, classOf[XService]), mConnection, Context.BIND_AUTO_CREATE)
     }
   }

@@ -6,8 +6,8 @@ object xah {
   val AUTHORITY = "com.xah.chat.data"
   val SHAREDPREFS = "com.xah.chat.prefs"
 
-  def MCName(context: Context): String =
-    context.getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE).getString(xah.PREF_MCNAME, "")
+  def Handle(context: Context): String =
+    context.getSharedPreferences(xah.SHAREDPREFS, Context.MODE_PRIVATE).getString(xah.PREF_HANDLE, "")
 
-  val PREF_MCNAME = "pref_mcname"
+  val PREF_HANDLE = "pref_handle"
 }

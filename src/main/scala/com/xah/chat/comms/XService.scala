@@ -151,7 +151,7 @@ class XService extends Service {
     crypt.reset()
     crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
     val data = JObj(Map(
-      "sender" -> JStr(xah.MCName(getApplicationContext)),
+      "sender" -> JStr(xah.Handle(getApplicationContext)),
       "isServer" -> JBool(false),
       "message" -> JStr(msg.replace("\"", "'")),
       "messageType" -> JNum(msg.charAt(0) match {
@@ -188,7 +188,7 @@ class XService extends Service {
         Log.i(TAG, "connecting")
         // mqtt client with specific url and client id
         if (client == null) {
-          client = new MqttClient(brokerUrl, xah.MCName(getApplicationContext), peristance)
+          client = new MqttClient(brokerUrl, xah.Handle(getApplicationContext), peristance)
         }
         val mOpts = new MqttConnectOptions
         mOpts.setCleanSession(false)
@@ -197,7 +197,7 @@ class XService extends Service {
         client.connect(mOpts)
         client.setCallback(callback)
         client.subscribe(serverListTopic.toLowerCase, 2)
-        client.subscribe(s"${xah.MCName(getApplicationContext)}/in".toLowerCase, 2)
+        client.subscribe(s"${xah.Handle(getApplicationContext)}/in".toLowerCase, 2)
 
       } onComplete {
         case Success(t) => {
