@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:background="@drawable/add_account_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/logo"
+            android:layout_width="300dp"
+            android:layout_height="300dp"/>
+    <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <Button
+                android:layout_weight="1"
+                android:text="login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+        <Button
+                android:layout_weight="1"
+                android:text="register  "
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+</RelativeLayout>

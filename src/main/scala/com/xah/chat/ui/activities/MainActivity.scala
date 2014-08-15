@@ -11,7 +11,7 @@ import android.view.{LayoutInflater, ViewGroup, View}
 
 class MainActivity extends BaseActivity {
   val TAG = "com.xah.MainActivity"
-  var MCName: String = _
+  var Handle: String = _
 
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)
