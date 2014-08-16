@@ -24,12 +24,12 @@ object ContactType {
 
 object ContactFields extends Enumeration {
   type Field = Value
-  val _ID, ContactName, Status, SubType, ContactType = Value
+  val _ID, Handle, Status, SubType, ContactType = Value
   val projection =
     (for (v <- values) yield if (v == ContactFields._ID) BaseColumns._ID else v.toString).toArray
 }
 
-class Contact(val JID: String, val MCName: String, val Status: String, val ContactType: Long)
+class Contact(val JID: String, val Handle: String, val Status: String, val ContactType: Long)
 
 class ContactsHelper extends TableHelper {
   val TAG = "com.xah.ContactsHelper"
@@ -38,7 +38,7 @@ class ContactsHelper extends TableHelper {
     val create = s"""
       create table ${Contacts.TABLE_NAME} (
         ${BaseColumns._ID} integer primary key autoincrement,
-        ${ContactFields.ContactName} Text,
+        ${ContactFields.Handle} Text,
         ${ContactFields.Status} Text,
         ${ContactFields.SubType} Text,
         ${ContactFields.ContactType} long

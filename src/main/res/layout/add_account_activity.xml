@@ -2,6 +2,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:background="@drawable/add_account_bg"
+                android:fitsSystemWindows="true"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <ImageView
@@ -15,13 +16,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <Button
+                android:onClick="login"
                 android:layout_weight="1"
+                android:textColor="@android:color/white"
                 android:text="login"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
         <Button
+                android:onClick="register"
                 android:layout_weight="1"
-                android:text="register  "
+                android:textColor="@android:color/white"
+                android:text="register"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
     </LinearLayout>

@@ -15,10 +15,10 @@ class DBHelper(context: Context) extends SQLiteOpenHelper(context, "xahchat.db",
                new CommunitiesHelper :: new ChannelsHelper :: List()
 
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-    tables.foreach(table => table.onUpgrade(db, oldVersion, newVersion))
+    tables.foreach(_.onUpgrade(db, oldVersion, newVersion))
   }
 
   def onCreate(db: SQLiteDatabase) {
-    tables.foreach(table => table.onCreate(db))
+    tables.foreach(_.onCreate(db))
   }
 }
