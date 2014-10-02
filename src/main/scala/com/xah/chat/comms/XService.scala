@@ -37,7 +37,6 @@ class XService extends Service {
   private var networkState = NETWORK_UNAVAILABLE
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
-  val serverListTopic = "+/list"
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
@@ -62,26 +61,8 @@ class XService extends Service {
   //Callback automatically triggers as and when new message arrives on specified topic
   private val callback = new MqttCallback() {
     //Handles Mqtt message
-    override def messageArrived(topic: String, message: MqttMessage) {
-      Log.i(TAG, s"$topic :: ${new String(message.getPayload())}")
-      try {
-        val listPattern = "xahchat/.+/list".r
-        (Option(message.getPayload), topic) match {
-          case (Some(pl: Array[Byte]), _) => {
-            val payload = new Payload(pl)
-            payload.messageType match {
-              case MessageType.NormalMessage | MessageType.FeedMessage => { }
-              case _ => Log.e(TAG, s"Unhandled MessageType: ${payload.messageType}")
-            }
-          }
-          case (None, listPattern(t)) => {
-            client.unsubscribe(topic)
-            //todo:delete server in listing
-          }
-        }
-      } catch {
-        case e: JSONException => Log.w(TAG, "JSON error occured", e)
-      }
+    override def messageArrived(topic: String, message: MqttMessage): Unit = {
+
     }
 
     override def deliveryComplete(arg0: IMqttDeliveryToken) {
@@ -132,37 +113,13 @@ class XService extends Service {
     if (client.isConnected) client.disconnect()
   }
 
-  def JSON2String(json: JSON): String = json match {
-    case JSeq(elems) =>
-      "[" + (elems map JSON2String mkString ", ") + "]"
-    case JObj(bindings) =>
-      val assocs = bindings map {
-        case (key, value) => "\"" + key + "\": " + JSON2String(value)
-      }
-      "{" + (assocs mkString ", ") + "}"
-    case JNum(num) => num.toString
-    case JStr(str) => '\"' + str + '\"'
-    case JBool(b) => b.toString
-    case JNull() => "null"
-  }
-
-  def send(msg: String, topic: String): Payload = {
+  def send(msg: String, topic: String) = {
     val crypt: MessageDigest = MessageDigest.getInstance("SHA-1")
     crypt.reset()
     crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
-    val data = JObj(Map(
-      "sender" -> JStr(xah.Handle(getApplicationContext)),
-      "isServer" -> JBool(false),
-      "message" -> JStr(msg.replace("\"", "'")),
-      "messageType" -> JNum(msg.charAt(0) match {
-        case '.' => MessageType.CommandMessage
-        case _ => MessageType.NormalMessage
-      }),
-      "messageId" -> JStr(JavaUtils.bytesToHex(crypt.digest())),
-      "timestamp" -> JNum(System.currentTimeMillis())
-    ))
 
-    val message = new MqttMessage(JSON2String(data).getBytes)
+
+    val message = new MqttMessage("test message".getBytes)
     try {
       if (connectionState != CONNECTED) {
         enqueueMessage(message -> topic)
@@ -177,7 +134,6 @@ class XService extends Service {
         if (networkState == NETWORK_AVAILABLE) connect()
       }
     }
-    new Payload(message.getPayload)
   }
 
   def connect() {
@@ -196,7 +152,6 @@ class XService extends Service {
         mOpts.setPassword("!xahchat!".toCharArray)
         client.connect(mOpts)
         client.setCallback(callback)
-        client.subscribe(serverListTopic.toLowerCase, 2)
         client.subscribe(s"${xah.Handle(getApplicationContext)}/in".toLowerCase, 2)
 
       } onComplete {

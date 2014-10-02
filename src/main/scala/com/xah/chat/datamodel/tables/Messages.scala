@@ -10,7 +10,7 @@ import scala.language.implicitConversions
 
 object MessageFields extends Enumeration {
   type Field = Value
-  val _ID, ContactId, Message, MessageId, Time, MessageType, ChannelId, isSent = Value
+  val _ID, ContactName, Message, Time, isSent = Value
   val projection =
     (for (v <- values) yield if (v == MessageFields._ID) BaseColumns._ID else v.toString).toArray
 }
@@ -23,19 +23,9 @@ object Messages {
   val _COUNT = BaseColumns._COUNT
   val TABLE_NAME = "Messages"
   final val CONTENT_URI = Uri.parse(s"content://${xah.AUTHORITY}/messages")
-  final val MESSAGES_JOIN_CONTACTS_URI = CONTENT_URI.buildUpon().appendPath("contacts").build()
   final val CONTENT_TYPE = "vnd.android.cursor.dir/vnd.xah.message"
   final val CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.xah.message"
   final val DEFAULT_SORT_ORDER = "Time DESC"
-}
-
-object MessageType {
-  val NormalMessage = 0
-  val CommandMessage = 1
-  val FeedMessage = 2
-  val ServerMessage = 3
-  val SublistMessage = 4
-  val PlayerlistMessage = 5
 }
 
 class MessagesHelper extends TableHelper {
@@ -45,11 +35,8 @@ class MessagesHelper extends TableHelper {
     val create = s"""
       create table ${Messages.TABLE_NAME} (
         ${BaseColumns._ID} integer primary key autoincrement,
-        ${MessageFields.ContactId} integer,
-        ${MessageFields.ChannelId} integer,
+        ${MessageFields.ContactName} Text,
         ${MessageFields.Message} Text,
-        ${MessageFields.MessageType} long,
-        ${MessageFields.MessageId} Text,
         ${MessageFields.Time} long,
         ${MessageFields.isSent} Boolean
       )"""

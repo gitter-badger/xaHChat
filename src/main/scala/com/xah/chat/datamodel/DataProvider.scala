@@ -15,17 +15,12 @@ class DataProvider extends ContentProvider {
   val matcher = new UriMatcher(UriMatcher.NO_MATCH)
   val TAG = "com.xah.DataProvider"
 
-  val CONTACTS = 100
-  val CONTACT = 101
-  val MESSAGES = 200
-  val MESSAGE = 201
+  val MESSAGES = 100
+  val MESSAGE = 101
   val MESSAGES_JOIN_CONTACTS = 202
 
-  matcher.addURI(xah.AUTHORITY, "contacts", CONTACTS)
-  matcher.addURI(xah.AUTHORITY, "contact/*", CONTACT)
   matcher.addURI(xah.AUTHORITY, "messages", MESSAGES)
   matcher.addURI(xah.AUTHORITY, "message/#", MESSAGE)
-  matcher.addURI(xah.AUTHORITY, "messages/contacts", MESSAGES_JOIN_CONTACTS)
 
   private var dbHelper: DBHelper = _
 
@@ -43,17 +38,13 @@ class DataProvider extends ContentProvider {
   }
 
   def getTablename(uri: Uri) = matcher `match` uri match {
-    case CONTACTS | CONTACT => Contacts.TABLE_NAME
     case MESSAGES | MESSAGE => Messages.TABLE_NAME
-    case MESSAGES_JOIN_CONTACTS =>
-      s"${Messages.TABLE_NAME} JOIN ${Contacts.TABLE_NAME} on ${Contacts.TABLE_NAME}.MCName = ${Messages.TABLE_NAME}.MCName "
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
 
   def getDb = dbHelper.getWritableDatabase
 
   def getContentUri(uri: Uri) = matcher `match` uri match {
-    case CONTACTS => Contacts.CONTENT_URI
     case MESSAGES => Messages.CONTENT_URI
     case _ => throw new IllegalArgumentException("Unknown URI " + uri)
   }
@@ -73,22 +64,19 @@ class DataProvider extends ContentProvider {
     if (rowId > 0) {
       val retUri = ContentUris.withAppendedId(getContentUri(uri), rowId)
       getContext.getContentResolver.notifyChange(uri, null)
-      getContext.getContentResolver.notifyChange(Messages.MESSAGES_JOIN_CONTACTS_URI, null)
       retUri
     } else
       throw new SQLException("Failed to insert row into " + uri)
   }
 
   override def delete(uri: Uri, where: String, whereArgs: Array[String]): Int = {
-    val count = getDb.delete(Contacts.TABLE_NAME, where, whereArgs)
+    val count = getDb.delete(getTablename(uri), where, whereArgs)
     getContext.getContentResolver.notifyChange(uri, null)
     count
   }
 
   override def getType(uri: Uri) = {
     matcher `match` uri match {
-      case CONTACTS => Contacts.CONTENT_TYPE
-      case CONTACT => Contacts.CONTENT_ITEM_TYPE
       case MESSAGES => Messages.CONTENT_TYPE
       case MESSAGE => Messages.CONTENT_ITEM_TYPE
       case _ => throw new IllegalArgumentException("Unknown URI " + uri)

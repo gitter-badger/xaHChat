@@ -23,11 +23,11 @@ apply plugin: "android-scala"
 
 android {
     compileSdkVersion "android-19"
-    buildToolsVersion "19.1.0"
+    buildToolsVersion "20"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 19
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }

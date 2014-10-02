@@ -10,9 +10,8 @@ import com.xah.chat.datamodel.tables.{ChannelsHelper, CommunitiesHelper, Message
  * Date: 2013/10/19
  * Time: 3:32 PM
  */
-class DBHelper(context: Context) extends SQLiteOpenHelper(context, "xahchat.db", null, 1) {
-  val tables = new ContactsHelper :: new MessagesHelper ::
-               new CommunitiesHelper :: new ChannelsHelper :: List()
+class DBHelper(context: Context) extends SQLiteOpenHelper(context, "xahchat.db", null, 2) {
+  val tables = new MessagesHelper :: Nil
 
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
     tables.foreach(_.onUpgrade(db, oldVersion, newVersion))
