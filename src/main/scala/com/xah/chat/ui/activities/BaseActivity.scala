@@ -11,7 +11,9 @@ class BaseActivity extends ActionBarActivity {
   val mConnection = new XServiceConnection
   val mDeviceId = JavaUtils.getDeviceId(this)
 
-  protected def runOnUi(action: Runnable) = this.runOnUiThread(action)
+  protected def runOnUi(f: () => Unit) = this.runOnUiThread(new Runnable {
+    override def run(): Unit = f()
+  })
 
   implicit def funToRunnable(fun: () => Unit): Runnable = new Runnable {
     def run() = fun()

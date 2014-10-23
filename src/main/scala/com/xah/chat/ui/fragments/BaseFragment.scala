@@ -1,14 +1,30 @@
 package com.xah.chat.ui.fragments
 
+import android.app.Activity
+import android.content.Context
+import android.support.v4.app.{FragmentActivity, Fragment}
+import com.xah.chat.R
 import com.xah.chat.ui.activities.BaseActivity
-import android.support.v4.app.Fragment
 
 /**
- * Created with IntelliJ IDEA.
- * User: Ryno
- * Date: 2013/10/16
- * Time: 8:48 PM
+ * some fragment helpers
+ * Created by lemonxah on 2014/10/10.
  */
-class BaseFragment extends Fragment {
-  def mService = getActivity.asInstanceOf[BaseActivity].mConnection.getService()
+trait TraitContext[V <: Context] {
+  def basis: V
+  implicit lazy val context: V = basis
+}
+
+abstract class BaseFragment extends Fragment with TraitContext[FragmentActivity] {
+  def TAG: String
+  private[BaseFragment] var mActivity: BaseActivity = _
+  private[BaseFragment] def trans = basis.getSupportFragmentManager.beginTransaction
+  override def onAttach(activity: Activity): Unit = mActivity = activity.asInstanceOf[BaseActivity]
+  override def basis: BaseActivity = mActivity
+  def show(): Unit = show(R.id.content_frame)
+  def show(viewId: Int): Unit = trans.replace(viewId, this, TAG).addToBackStack(TAG).commit()
+  def showNoBackStack(): Unit = showNoBackStack(R.id.content_frame)
+  def showNoBackStack(viewId: Int): Unit = trans.replace(viewId, this, TAG).commit()
+  def add(): Unit = add(R.id.content_frame)
+  def add(viewId: Int): Unit = trans.add(viewId, this, TAG).commit()
 }
