@@ -9,7 +9,8 @@ import android.database.sqlite.SQLiteDatabase
  * Time: 3:48 PM
  */
 trait TableHelper {
-  def onCreate(db: SQLiteDatabase): Unit
-
+  def TAG : String
+  def CreateStatement: String
+  def onCreate(db: SQLiteDatabase): Unit = db.execSQL(CreateStatement)
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit
 }

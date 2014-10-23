@@ -29,10 +29,9 @@ object Messages {
 }
 
 class MessagesHelper extends TableHelper {
-  val TAG = "com.xah.MessagesHelper"
+  def TAG = "com.xah.MessagesHelper"
 
-  def onCreate(db: SQLiteDatabase): Unit = {
-    val create = s"""
+  def CreateStatement = s"""
       create table ${Messages.TABLE_NAME} (
         ${BaseColumns._ID} integer primary key autoincrement,
         ${MessageFields.ContactName} Text,
@@ -40,14 +39,9 @@ class MessagesHelper extends TableHelper {
         ${MessageFields.Time} long,
         ${MessageFields.isSent} Boolean
       )"""
-    Log.d(TAG, create)
-    db.execSQL(create)
-  }
 
   def onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int): Unit = {
-    val dropTable = s"drop table if exists ${Messages.TABLE_NAME}"
-    db.execSQL(dropTable)
+    db.execSQL(s"drop table if exists ${Messages.TABLE_NAME}")
     onCreate(db)
   }
-
 }

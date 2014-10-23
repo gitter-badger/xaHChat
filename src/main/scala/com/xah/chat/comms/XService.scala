@@ -3,6 +3,7 @@ package com.xah.chat.comms
 import android.os.IBinder
 import android.app.Service
 import android.content._
+import com.xah.chat.traits.TraitContext
 import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
@@ -20,10 +21,10 @@ import scala.util.Success
 import org.json.JSONException
 import java.util.UUID
 
-class XService extends Service {
+class XService extends Service with TraitContext[Context] {
 
   private val TAG = "com.xah.chat/XService"
-  private val brokerUrl = "tcp://xahsrv.co.za:1883"
+  private val brokerUrl = "tcp://chat.xah.co.za:1883"
   private val DISCONNECTED = 0
   private val CONNECTING = 1
   private val CONNECTED = 2
@@ -35,25 +36,25 @@ class XService extends Service {
   private val NETWORK_AVAILABLE = 1
 
   private var networkState = NETWORK_UNAVAILABLE
+  def basis = getBaseContext
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
 
   private var mBinder: IBinder = _
   //Set up persistence for messages
-  private val peristance = new MemoryPersistence();
+  private val peristance = new MemoryPersistence()
 
 
   class ConnectivityReceiver extends BroadcastReceiver {
     def onReceive(context: Context, intent: Intent) {
       intent.getAction match {
-        case ConnectivityManager.CONNECTIVITY_ACTION => {
+        case ConnectivityManager.CONNECTIVITY_ACTION =>
           val oldState = networkState
           updateNetworkState()
           val newState = networkState
           if (oldState != newState && networkState == NETWORK_AVAILABLE) {
             connect()
           }
-        }
       }
     }
   }
@@ -144,7 +145,7 @@ class XService extends Service {
         Log.i(TAG, "connecting")
         // mqtt client with specific url and client id
         if (client == null) {
-          client = new MqttClient(brokerUrl, xah.Handle(getApplicationContext), peristance)
+          client = new MqttClient(brokerUrl, xah.Handle, peristance)
         }
         val mOpts = new MqttConnectOptions
         mOpts.setCleanSession(false)
@@ -152,10 +153,10 @@ class XService extends Service {
         mOpts.setPassword("!xahchat!".toCharArray)
         client.connect(mOpts)
         client.setCallback(callback)
-        client.subscribe(s"${xah.Handle(getApplicationContext)}/in".toLowerCase, 2)
+        client.subscribe(s"${xah.Handle}/in".toLowerCase, 2)
 
       } onComplete {
-        case Success(t) => {
+        case Success(t) =>
           connectionState = CONNECTED
           Log.i(TAG, "con/sub")
           if (defferedMessages != null && defferedMessages.length > 0) {
@@ -170,13 +171,11 @@ class XService extends Service {
               }
             })
           }
-        }
-        case Failure(e: MqttException) => {
+        case Failure(e: MqttException) =>
           connectionState = DISCONNECTED
           Log.e(TAG, s"ReasonCode: ${e.getReasonCode}, Message: ${e.getMessage}")
           Thread.sleep(1000)
           if (networkState == NETWORK_AVAILABLE) connect()
-        }
         case _ =>
       }
     }

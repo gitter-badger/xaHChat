@@ -1,21 +1,16 @@
 package com.xah.chat.ui.fragments
 
 import android.app.Activity
-import android.content.Context
 import android.support.v4.app.{FragmentActivity, Fragment}
 import com.xah.chat.R
+import com.xah.chat.traits.TraitContext
 import com.xah.chat.ui.activities.BaseActivity
 
 /**
  * some fragment helpers
  * Created by lemonxah on 2014/10/10.
  */
-trait TraitContext[V <: Context] {
-  def basis: V
-  implicit lazy val context: V = basis
-}
-
-abstract class BaseFragment extends Fragment with TraitContext[FragmentActivity] {
+abstract class BaseFragment extends Fragment with TraitContext[BaseActivity] {
   def TAG: String
   private[BaseFragment] var mActivity: BaseActivity = _
   private[BaseFragment] def trans = basis.getSupportFragmentManager.beginTransaction
