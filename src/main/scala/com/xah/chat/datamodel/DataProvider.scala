@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteQueryBuilder
 import android.content.UriMatcher
 import android.content.{ContentValues, ContentUris}
 import android.database.SQLException
-import com.xah.chat.datamodel.tables.Contacts
 import com.xah.chat.datamodel.tables.Messages
 
 class DataProvider extends ContentProvider {

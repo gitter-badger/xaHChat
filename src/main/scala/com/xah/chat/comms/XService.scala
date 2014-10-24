@@ -119,7 +119,6 @@ class XService extends Service with TraitContext[Context] {
     crypt.reset()
     crypt.update((msg.replace("\"", "'") + System.currentTimeMillis).getBytes("utf8"))
 
-
     val message = new MqttMessage("test message".getBytes)
     try {
       if (connectionState != CONNECTED) {
@@ -141,7 +140,7 @@ class XService extends Service with TraitContext[Context] {
     if (networkState == NETWORK_AVAILABLE &&
       (connectionState == DISCONNECTED || connectionState == RECONNECTING)) {
       connectionState = CONNECTING
-      future {
+      Future {
         Log.i(TAG, "connecting")
         // mqtt client with specific url and client id
         if (client == null) {

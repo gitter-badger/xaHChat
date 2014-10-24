@@ -2,7 +2,7 @@ package com.xah.chat.datamodel
 
 import android.database.sqlite.{SQLiteDatabase, SQLiteOpenHelper}
 import android.content.Context
-import com.xah.chat.datamodel.tables.{ChannelsHelper, CommunitiesHelper, MessagesHelper, ContactsHelper}
+import com.xah.chat.datamodel.tables.MessagesHelper
 
 /**
  * Created with IntelliJ IDEA.
