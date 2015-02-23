@@ -17,7 +17,6 @@ class BaseActivity extends ActionBarActivity with TraitContext[ActionBarActivity
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
-    requestWindowFeature(Window.FEATURE_NO_TITLE)
   }
 
   protected def runOnUi(f: () => Unit) = this.runOnUiThread(new Runnable {

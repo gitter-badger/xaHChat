@@ -148,8 +148,8 @@ class XService extends Service with TraitContext[Context] {
         }
         val mOpts = new MqttConnectOptions
         mOpts.setCleanSession(false)
-        mOpts.setUserName("xahchat")
-        mOpts.setPassword("!xahchat!".toCharArray)
+//        mOpts.setUserName("xahchat")
+//        mOpts.setPassword("!xahchat!".toCharArray)
         client.connect(mOpts)
         client.setCallback(callback)
         client.subscribe(s"${xah.Handle}/in".toLowerCase, 2)
