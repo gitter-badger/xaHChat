@@ -10,6 +10,6 @@ import android.view.View
  */
 trait TraitActivityContext[V <: Activity] {
   this: Activity =>
-  implicit lazy val context: Activity = this.asInstanceOf[V]
+  implicit lazy val context: V = this.asInstanceOf[V]
   implicit lazy val contentView: View = this.getWindow.getDecorView.getRootView
 }
