@@ -3,7 +3,7 @@ package com.xah.chat.comms
 import android.os.IBinder
 import android.app.Service
 import android.content._
-import com.xah.chat.traits.TraitContext
+import com.xah.chat.traits.TraitServiceContext
 import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log
@@ -21,7 +21,7 @@ import scala.util.Success
 import org.json.JSONException
 import java.util.UUID
 
-class XService extends Service with TraitContext[Context] {
+class XService extends Service with TraitServiceContext {
 
   private val TAG = "com.xah.chat/XService"
   private val brokerUrl = "tcp://xahbox.com:1883"
@@ -36,7 +36,6 @@ class XService extends Service with TraitContext[Context] {
   private val NETWORK_AVAILABLE = 1
 
   private var networkState = NETWORK_UNAVAILABLE
-  def basis = getBaseContext
 
   var defferedMessages: mutable.Queue[(MqttMessage, String)] = _
 

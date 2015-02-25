@@ -3,13 +3,11 @@ package com.xah.chat.comms
 import android.content.{Context, ServiceConnection, ComponentName}
 import android.os.IBinder
 import android.util.Log
-import com.xah.chat.traits.TraitContext
 
-class  XServiceConnection extends ServiceConnection with TraitContext[Context] {
+class  XServiceConnection extends ServiceConnection {
   val TAG = "XServiceConnection"
   var mService: XService = _
   var mBound: Boolean = false
-  def basis = mService.getBaseContext
 
   override def onServiceConnected(className: ComponentName, service: IBinder) = {
     mService = service.asInstanceOf[XBinder].getService()
