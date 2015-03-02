@@ -2,13 +2,13 @@ package com.xah.chat.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Window
-import android.widget.Toast
 import com.xah.chat.R
 import com.xah.chat.comms.XService
 import com.xah.chat.traits.{XToast, XButton}
+import com.xah.chat.traits.ViewConversions._
 
 class AddAccountActivity extends BaseActivity {
+
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)
     startService(new Intent(this, classOf[XService]))

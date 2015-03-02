@@ -4,6 +4,8 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.{Button, EditText, TextView, ViewAnimator}
 import com.xah.chat.utils.StaticImports._
+import language.implicitConversions
+
 
 /**
  * Some View Helpers
@@ -47,6 +49,10 @@ class XButton(val v: View, val id: Int) extends TraitButton[Button]
 class XTextView(val v: View, val id: Int) extends TraitTextView[TextView]
 class XEditText(val v: View, val id: Int) extends TraitEditText[EditText]
 class XViewAnimator(val v: View, val id: Int) extends TraitViewAnimator[ViewAnimator]
+
+object ViewConversions {
+  implicit def x2v[V](x: TraitView[V]) : V  = x.view
+}
 
 object XTextView {
   def apply(id: Int)(implicit view: View) = new XTextView(view, id)
