@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.xah.chat.R
 import com.xah.chat.comms.XService
-import com.xah.chat.traits.{XToast, XButton}
+import com.xah.chat.traits.{XToastL, XToast, XButton}
 import com.xah.chat.traits.ViewConversions._
 
 class AddAccountActivity extends BaseActivity {
@@ -17,7 +17,7 @@ class AddAccountActivity extends BaseActivity {
       XToast("do some login stuff")
     }
     XButton(R.id.register).onClick = v => {
-      XToast("do some register stuff")
+      XToastL("do some register stuff")
     }
   }
 }
