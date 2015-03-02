@@ -12,7 +12,6 @@ import scala.language.implicitConversions
 import ExecutionContext.Implicits.global
 import com.xah.chat.datamodel.tables._
 import java.security.MessageDigest
-import com.xah.chat.utils.JavaUtils
 import com.xah.chat.datamodel.xah
 import scala.collection.mutable
 import android.net.ConnectivityManager

@@ -7,12 +7,12 @@ import com.xah.chat.comms.{XService, XServiceConnection}
 import android.content.{Context, Intent}
 import com.xah.chat.traits.TraitActivityContext
 import scala.language.implicitConversions
+import com.xah.chat.utils.DeviceUtils
 import com.xah.chat.datamodel.xah
-import com.xah.chat.utils.JavaUtils
 
 class BaseActivity extends ActionBarActivity with TraitActivityContext[ActionBarActivity] {
   val mConnection = new XServiceConnection
-  val mDeviceId = JavaUtils.getDeviceId(this)
+  val mDeviceId = DeviceUtils.getDeviceId(this)
 
   override def onCreate(savedInstanceState: Bundle): Unit = {
     super.onCreate(savedInstanceState)
@@ -21,10 +21,6 @@ class BaseActivity extends ActionBarActivity with TraitActivityContext[ActionBar
   protected def runOnUi(f: () => Unit) = this.runOnUiThread(new Runnable {
     override def run(): Unit = f()
   })
-
-  implicit def funToRunnable(fun: () => Unit): Runnable = new Runnable {
-    def run() = fun()
-  }
 
   override def onStart() = {
     super.onStart()

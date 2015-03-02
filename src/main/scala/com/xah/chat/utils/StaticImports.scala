@@ -2,6 +2,7 @@ package com.xah.chat.utils
 
 import android.view.View
 import android.view.View.OnClickListener
+import com.xah.chat.traits.TraitView
 import language.implicitConversions
 
 /**
@@ -15,8 +16,10 @@ object StaticImports {
   implicit def funToOnClick(fun: (View) => Any): OnClickListener = new OnClickListener {
     override def onClick(v: View): Unit = fun(v)
   }
-  implicit def viewWithTraitView(v: View): TraitView[View] = new TraitView[View] {
-    override def view: View = v
+  implicit def viewWithTraitView(ov: View): TraitView[View] = new TraitView[View] {
+    val id = 0
+    val v: View = ov
+    override def view: View = ov
   }
   implicit class ViewExtender(v: View) {
     def find[A](id: Int) = v.findViewById(id).asInstanceOf[A]

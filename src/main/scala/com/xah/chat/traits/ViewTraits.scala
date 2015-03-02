@@ -1,17 +1,20 @@
-package com.xah.chat.utils
+package com.xah.chat.traits
 
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.{ViewAnimator, EditText, Button, TextView}
-import StaticImports._
+import android.widget.{Button, EditText, TextView, ViewAnimator}
+import com.xah.chat.utils.StaticImports._
 
 /**
  * Some View Helpers
  * Created by lemonxah on 2014/10/08.
  */
 
+
 trait TraitView[V <: View] {
-  def view: V
+  def id: Int
+  def v: View
+  def view: V = v.find[V](id)
 }
 
 trait TraitTextView[V <: TextView] extends TraitView[V] {
@@ -40,18 +43,10 @@ trait TraitViewAnimator[V <: ViewAnimator] extends TraitView[V] {
   def showPrevious() = view.showPrevious()
 }
 
-class XButton(v: View, id: Int) extends TraitButton[Button] {
-  def view = v.find[Button](id)
-}
-class XTextView(v: View, id: Int) extends TraitTextView[TextView] {
-  def view = v.find[TextView](id)
-}
-class XEditText(v: View, id: Int) extends TraitEditText[EditText] {
-  def view = v.find[EditText](id)
-}
-class XViewAnimator(v: View, id: Int) extends TraitViewAnimator[ViewAnimator] {
-  def view = v.find[ViewAnimator](id)
-}
+class XButton(val v: View, val id: Int) extends TraitButton[Button]
+class XTextView(val v: View, val id: Int) extends TraitTextView[TextView]
+class XEditText(val v: View, val id: Int) extends TraitEditText[EditText]
+class XViewAnimator(val v: View, val id: Int) extends TraitViewAnimator[ViewAnimator]
 
 object XTextView {
   def apply(id: Int)(implicit view: View) = new XTextView(view, id)
