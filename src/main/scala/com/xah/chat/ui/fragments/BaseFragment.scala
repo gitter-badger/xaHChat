@@ -1,7 +1,7 @@
 package com.xah.chat.ui.fragments
 
 import android.support.v4.app.Fragment
-import com.xah.chat.traits.TraitFragmentContext
+import com.xah.chat.framework.TraitFragmentContext
 
 /**
  * some fragment helpers

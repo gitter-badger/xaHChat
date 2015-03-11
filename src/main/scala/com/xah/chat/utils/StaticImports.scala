@@ -2,7 +2,7 @@ package com.xah.chat.utils
 
 import android.view.View
 import android.view.View.OnClickListener
-import com.xah.chat.traits.TraitView
+import com.xah.chat.framework.TraitView
 import language.implicitConversions
 
 /**

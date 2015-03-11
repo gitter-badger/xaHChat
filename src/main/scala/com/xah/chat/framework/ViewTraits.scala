@@ -1,4 +1,4 @@
-package com.xah.chat.traits
+package com.xah.chat.framework
 
 import android.view.View
 import android.view.View.OnClickListener

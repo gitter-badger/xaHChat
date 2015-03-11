@@ -5,7 +5,7 @@ import android.support.v7.app.ActionBarActivity
 import android.view.{View, Window}
 import com.xah.chat.comms.{XService, XServiceConnection}
 import android.content.{Context, Intent}
-import com.xah.chat.traits.TraitActivityContext
+import com.xah.chat.framework.TraitActivityContext
 import scala.language.implicitConversions
 import com.xah.chat.utils.DeviceUtils
 import com.xah.chat.datamodel.xah

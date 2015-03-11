@@ -1,5 +1,11 @@
 package com.xah.chat.ui.activities
 
-class LoginActivity {
+import android.os.Bundle
+import com.xah.chat.R
 
+class LoginActivity extends BaseActivity {
+  override def onCreate(savedInstanceState: Bundle): Unit = {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.login_activity)
+  }
 }

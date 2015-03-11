@@ -63,6 +63,7 @@ dependencies {
     compile 'org.scala-lang:scala-library:2.11.5'
     compile 'org.eclipse.paho:mqtt-client:0.4.0'
     compile 'com.squareup.picasso:picasso:2.1.1'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp:1.2.1'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:appcompat-v7:21.0.3'

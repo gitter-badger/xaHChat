@@ -3,7 +3,7 @@ package com.xah.chat.comms
 import android.os.IBinder
 import android.app.Service
 import android.content._
-import com.xah.chat.traits.TraitServiceContext
+import com.xah.chat.framework.TraitServiceContext
 import org.eclipse.paho.client.mqttv3._
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import android.util.Log

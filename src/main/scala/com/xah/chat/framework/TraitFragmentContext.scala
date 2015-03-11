@@ -1,4 +1,4 @@
-package com.xah.chat.traits
+package com.xah.chat.framework
 
 import android.app.Activity
 import android.support.v4.app.Fragment
