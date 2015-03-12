@@ -2,7 +2,8 @@ package com.xah.chat.ui.activities
 
 import android.os.Bundle
 import com.xah.chat.R
-import com.xah.chat.framework.XServiceStart
+import com.xah.chat.datamodel.xah
+import com.xah.chat.framework.{XActivityStart, XServiceStart}
 import scala.language.implicitConversions
 import android.content.{Intent, Context}
 import com.xah.chat.comms.XService
@@ -16,8 +17,11 @@ class MainActivity extends BaseActivity {
 
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)
-    XServiceStart[XService]
-    setContentView(R.layout.activity_main)
-    Log.d(TAG, s"DeviceId: $mDeviceId")
+    if(xah.Handle.isEmpty) XActivityStart(classOf[AddAccountActivity])
+    else {
+      XServiceStart(classOf[XService])
+      setContentView(R.layout.activity_main)
+      Log.d(TAG, s"DeviceId: $mDeviceId")
+    }
   }
 }

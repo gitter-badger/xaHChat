@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.xah.chat.R
 import com.xah.chat.comms.XService
-import com.xah.chat.framework.{XActivity, XToastL, XToast, XButton}
+import com.xah.chat.framework._
 import com.xah.chat.framework.ViewConversions._
 
 class AddAccountActivity extends BaseActivity {
@@ -14,8 +14,8 @@ class AddAccountActivity extends BaseActivity {
     startService(new Intent(this, classOf[XService]))
     setContentView(R.layout.add_account_activity)
     XButton(R.id.login).onClick = v =>
-      XActivity[LoginActivity].start()
+      XActivityStart(classOf[LoginActivity])
     XButton(R.id.register).onClick = v =>
-      XActivity[RegisterActivity].start()
+      XActivityStart(classOf[RegisterActivity])
   }
 }

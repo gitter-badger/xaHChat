@@ -51,7 +51,7 @@ class XEditText(val v: View, val id: Int) extends TraitEditText[EditText]
 class XViewAnimator(val v: View, val id: Int) extends TraitViewAnimator[ViewAnimator]
 
 object ViewConversions {
-  implicit def x2v[V](x: TraitView[V]) : V  = x.view
+  implicit def x2v[V <: View](x: TraitView[V]) : V  = x.view
 }
 
 object XTextView {

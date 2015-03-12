@@ -11,18 +11,18 @@ import android.content.Intent
  * http://stackoverflow.com/users/2919672/lemon-xah 
  */
 object XIntent {
-  def apply[T <: Activity](implicit context: Activity) = new Intent(context, Class[T])
+  def apply[T](c: Class[T])(implicit context: Activity) = new Intent(context, c)
 }
-class XActivity[T <: Activity](context: Activity) {
-  lazy val intent = XIntent[T](context)
+class XActivity[T <: Activity](c: Class[T])(context: Activity) {
+  lazy val intent = XIntent(c)(context)
   def start() = context.startActivity(intent)
 }
 object XActivity {
-  def apply[T <: Activity](implicit context: Activity) = new XActivity[T](context)
+  def apply[T <: Activity](c: Class[T])(implicit context: Activity) = new XActivity[T](c)(context)
 }
 object XActivityStart {
-  def apply[T <: Activity](implicit context: Activity) = new XActivity[T](context).start()
+  def apply[T <: Activity](c: Class[T])(implicit context: Activity) = new XActivity[T](c)(context).start()
 }
 object XServiceStart {
-  def apply[T <: Service](implicit context: Activity) = context.startService(XIntent[T](context))
+  def apply[T <: Service](c: Class[T])(implicit context: Activity) = context.startService(XIntent[T](c)(context))
 }

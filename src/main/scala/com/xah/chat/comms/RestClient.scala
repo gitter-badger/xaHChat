@@ -10,5 +10,5 @@ import retrofit.RestAdapter
  * http://stackoverflow.com/users/2919672/lemon-xah 
  */
 object RestClient {
-  lazy val xahbox: Api = new RestAdapter.Builder().setEndpoint("http://xahbox.com:5000").build().create(Class[Api])
+  lazy val xahbox: Api = new RestAdapter.Builder().setEndpoint("http://xahbox.com:5000").build().create(classOf[Api])
 }

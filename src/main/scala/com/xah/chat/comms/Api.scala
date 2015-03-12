@@ -1,8 +1,7 @@
 package com.xah.chat.comms
 
-import com.squareup.okhttp.Request.Body
 import retrofit.Callback
-import retrofit.http.POST
+import retrofit.http.{Body, POST}
 
 /**
  * Project: xaHChat
