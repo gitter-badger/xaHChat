@@ -1,5 +1,6 @@
 package com.xah.chat.ui.activities
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.view.{View, Window}
@@ -10,7 +11,7 @@ import scala.language.implicitConversions
 import com.xah.chat.utils.DeviceUtils
 import com.xah.chat.datamodel.xah
 
-class BaseActivity extends ActionBarActivity with TraitActivityContext[ActionBarActivity] {
+class BaseActivity extends Activity with TraitActivityContext[Activity] {
   val mConnection = new XServiceConnection
   val mDeviceId = DeviceUtils.getDeviceId(this)
 

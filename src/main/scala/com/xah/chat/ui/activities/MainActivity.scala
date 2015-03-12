@@ -17,7 +17,10 @@ class MainActivity extends BaseActivity {
 
   override def onCreate(data: Bundle): Unit = {
     super.onCreate(data)
-    if(xah.Handle.isEmpty) XActivityStart(classOf[AddAccountActivity])
+    if(xah.Handle.isEmpty) {
+      XActivityStart(classOf[AddAccountActivity])
+      finish()
+    }
     else {
       XServiceStart(classOf[XService])
       setContentView(R.layout.activity_main)
