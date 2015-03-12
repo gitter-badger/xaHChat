@@ -10,7 +10,7 @@
             android:icon="@drawable/ic_launcher"
             android:label="@string/app_name">
         <activity
-                android:name="com.xah.chat.ui.activities.AddAccountActivity"
+                android:name=".ui.activities.MainActivity"
                 android:theme="@style/xahchat"
                 android:label="@string/app_name"
                 android:launchMode="singleTop">
@@ -20,10 +20,14 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.xah.chat.comms.XService"/>
+        <activity android:name=".ui.activities.AddAccountActivity" android:theme="@style/xahchat" />
+        <activity android:name=".ui.activities.RegisterActivity" android:theme="@style/xahchat" />
+        <activity android:name=".ui.activities.LoginActivity" android:theme="@style/xahchat" />
+
+        <service android:name=".comms.XService"/>
 
         <provider
-                android:name="com.xah.chat.datamodel.DataProvider"
+                android:name=".datamodel.DataProvider"
                 android:authorities="com.xah.chat.data"
                 android:exported="false">
         </provider>

@@ -2,47 +2,13 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <style name="xahchat" parent="@style/_xahchat"/>
-
-  <style name="_xahchat" parent="Theme.AppCompat.Light.DarkActionBar">
-
-    <item name="android:editTextStyle">@style/EditTextxahchat</item>
-
-    <item name="android:textColorHighlight">#99669900</item>
-
-    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewxahchat</item>
-
-    <item name="android:checkboxStyle">@style/CheckBoxxahchat</item>
-
-    <item name="android:radioButtonStyle">@style/RadioButtonxahchat</item>
-
-    <item name="android:buttonStyle">@style/Buttonxahchat</item>
-
-    <item name="android:imageButtonStyle">@style/ImageButtonxahchat</item>
-
-    <item name="android:spinnerStyle">@style/Spinnerxahchat</item>
-
-    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemxahchat</item>
-
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarxahchat</item>
-
-    <item name="android:seekBarStyle">@style/SeekBarxahchat</item>
-
-    <item name="android:ratingBarStyle">@style/RatingBarxahchat</item>
-
-    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigxahchat</item>
-
-    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallxahchat</item>
-
-    <item name="android:buttonStyleToggle">@style/Togglexahchat</item>
-
-    <item name="android:listViewStyle">@style/ListViewxahchat</item>
-
-    <item name="android:listViewWhiteStyle">@style/ListViewxahchat.White</item>
-
-    <item name="android:spinnerItemStyle">@style/SpinnerItemxahchat</item>
-
+  <style name="xahchat" parent="@android:style/Theme.Material.Light">
+      <!-- Main theme colors -->
+      <!--   your app branding color for the app bar -->
+      <item name="android:colorPrimary">@color/primary</item>
+      <!--   darker variant for the status bar and contextual app bars -->
+      <item name="android:colorPrimaryDark">@color/primary_dark</item>
+      <!--   theme UI controls like checkboxes and text fields -->
+      <item name="android:colorAccent">@color/accent</item>
   </style>
-
 </resources>

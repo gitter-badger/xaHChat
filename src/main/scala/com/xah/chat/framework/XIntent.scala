@@ -1,6 +1,6 @@
 package com.xah.chat.framework
 
-import android.app.Activity
+import android.app.{Service, Activity}
 import android.content.Intent
 
 /**
@@ -20,4 +20,9 @@ class XActivity[T <: Activity](context: Activity) {
 object XActivity {
   def apply[T <: Activity](implicit context: Activity) = new XActivity[T](context)
 }
-
+object XActivityStart {
+  def apply[T <: Activity](implicit context: Activity) = new XActivity[T](context).start()
+}
+object XServiceStart {
+  def apply[T <: Service](implicit context: Activity) = context.startService(XIntent[T](context))
+}
